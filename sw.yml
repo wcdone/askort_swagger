@@ -3389,9 +3389,17 @@ paths:
           application/json:
             schema:
               type: object
-              example:
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
-                  - 8d7850b3-8bc9-11e7-86a2
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Сбережение'
+                    description: Публичный идентификатор Сбережение
+            example:
+              Идентификатор:
+                - 8d7850b3-8bc9-11e7-86a2
       parameters:
         - name: node
           in: path
@@ -5048,13 +5056,42 @@ paths:
           application/json:
             schema:
               type: object
-              example:
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Параметры:
-                  Режим: Детально
-                  НачалоПериода: '2022-01-01T00:00:00'
-                  КонецПериода: '2023-04-28T00:00:00'
+                  type: object
+                  properties:
+                    НачалоПериода:
+                      type: string
+                      format: data-time
+                      description: ''
+                    КонецПериода:
+                      type: string
+                      format: data-time
+                      description: ''
+                    Режим:
+                      type: string
+                      enum:
+                        - Детально
+                        - СвернутьДоДатыПлатежа
+                        - СвернутьДоВидаНачисления
+                      description: >-
+                        Детально - детализация начислений по дням и датам
+                        платежей; 
+                        СвернутьДоДатыПлатежа - детализация до даты
+                        платежа; СвернутьДоВидаНачисления - детализация до вида
+                        начисления
                 Идентификатор:
-                  - 8d7850b3-8bc9-11e7-86a2
+                  $ref: '#/components/schemas/Сбережение'
+                  description: Публичный идентификатор Сбережение
+            example:
+              Параметры:
+                Режим: Детально
+                НачалоПериода: '2022-01-01T00:00:00'
+                КонецПериода: '2023-04-28T00:00:00'
+              Идентификатор:
+                - 8d7850b3-8bc9-11e7-86a2
       parameters:
         - name: node
           in: path
@@ -5139,12 +5176,36 @@ paths:
           application/json:
             schema:
               type: object
-              example:
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
-                  - 8d7850b3-8bc9-11e7-86a2
+                  $ref: '#/components/schemas/Сбережение'
+                  description: Публичный идентификатор Сбережение
                 Параметры:
-                  НачалоПероида: '2000-01-01T23:00:00'
-                  КонецПериода: '2023-07-01T23:00:00'
+                  type: object
+                  properties:
+                    НачалоПериода:
+                      type: string
+                      format: data-time
+                      description: ''
+                    КонецПериода:
+                      type: string
+                      format: data-time
+                      description: ''
+                    Детально:
+                      type: boolean
+                      description: >-
+                        true -  разворачивается до даты платежа   
+                      example: false
+                     
+            example:
+              Идентификатор:
+                - 8d7850b3-8bc9-11e7-86a2
+              Параметры:
+                НачалоПероида: '2000-01-01T23:00:00'
+                КонецПериода: '2023-07-01T23:00:00'
+                Детально: false
       parameters:
         - name: node
           in: path
