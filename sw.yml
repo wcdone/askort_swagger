@@ -3394,8 +3394,10 @@ paths:
                   $ref: '#/components/schemas/external_data'
                 Идентификатор:
                   type: array
-                  items:
-                    $ref: '#/components/schemas/Сбережение'
+                  items:      
+                    type: string
+                    maxLength: 100
+                    example: 8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd
                     description: Публичный идентификатор Сбережение
             example:
               Идентификатор:
