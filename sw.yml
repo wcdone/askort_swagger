@@ -16134,19 +16134,52 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              example:
-                Идентификатор: 19ba-11ed-bd75-0242ac120002ЗЗайм
-                ТипОбъекта: АЭ_ЗаймПредоставленный
+              type: object              
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  example: 19ba-11ed-bd75-0242ac120002ЗЗайм
+                  description: Публичный идентификатор объекта для добавления файла  
+                ТипОбъекта:                         
+                  type: string
+                  description:  Тип объекта из дерева метаданных
+                  example: АЭ_ЗаймПредоставленный
                 Файлы:
-                  - ИмяФайла: ТестФайл
-                    Расширение: .txt
-                    Файл: >-
-                      0KLQtdGB0YLQvtCy0YvQuSDQvdCw0LHQvtGAINC00LDQvdC90YvRhSDQsNGB0LrQvtGA0YI=
-                  - ИмяФайла: ТестИзображение
-                    Расширение: png
-                    Файл: >-
-                      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
+                  type: array
+                  items:
+                    type: object
+                    properties:                      
+                      ИмяФайла:
+                        type: string
+                        description: Имя файла
+                        example: ТестФайл  
+                      Расширение:
+                        type: string
+                        description: Расширение файла
+                        example: .txt                                          
+                      Файл:
+                        type: string
+                        description: файл в base64
+                        example: 0KLQtdGB0YLQvtCy0YvQuSDQvdCw0LHQvtGAINC00LDQvdC90YvRhSDQsNGB0LrQvtGA0YI=  
+                    required:
+                      - ИмяФайла
+                      - Файл       
+              required:
+                - Идентификатор
+                - ТипОбъекта
+                - Файлы
+            example:
+              Идентификатор: 19ba-11ed-bd75-0242ac120002ЗЗайм
+              ТипОбъекта: АЭ_ЗаймПредоставленный
+              Файлы:
+                - ИмяФайла: ТестФайл
+                  Расширение: .txt
+                  Файл: >-
+                    0KLQtdGB0YLQvtCy0YvQuSDQvdCw0LHQvtGAINC00LDQvdC90YvRhSDQsNGB0LrQvtGA0YI=
+                - ИмяФайла: ТестИзображение
+                  Расширение: png
+                  Файл: >-
+                    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
       parameters:
         - name: node
           in: path
