@@ -15023,7 +15023,7 @@ paths:
                       $ref: '#/components/schemas/Контрагент'
                     ДоговорКонтрагента:
                       $ref: '#/components/schemas/Идентификатор'
-                      description: Публичный идентификатор
+                      description: Публичный идентификатор договора контрагента
                     Изменять:
                       type: boolean
                       description: >-
