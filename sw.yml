@@ -5844,7 +5844,6 @@ paths:
                       type: string
                       format: data-time
                       description: 'Дата на которую нужно получить актуальный график'
-              
             example:
               Параметры:
                 Дата: '2023-03-21T10:00:00'
