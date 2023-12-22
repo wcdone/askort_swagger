@@ -5535,13 +5535,36 @@ paths:
           application/json:
             schema:
               type: object
-              example:
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
-                  - 8d7850b3-8bc9-11e7-86a2
+                  $ref: '#/components/schemas/Сбережение'
+                  description: Публичный идентификатор Сбережение
                 Параметры:
-                  НачалоПероида: '2000-01-01T23:00:00'
-                  КонецПериода: '2023-07-01T23:00:00'
-                  Режим: Детально
+                  type: object
+                  properties:
+                    НачалоПериода:
+                      type: string
+                      format: data-time
+                      description: ''
+                    КонецПериода:
+                      type: string
+                      format: data-time
+                      description: ''
+                    Режим:
+                      type: string
+                      enum:
+                        - Детально
+                        - СвернутьДоДатыПлатежа
+                        - СвернутьДоВидаНачисления
+            example:
+              Идентификатор:
+                - 8d7850b3-8bc9-11e7-86a2
+              Параметры:
+                НачалоПероида: '2000-01-01T23:00:00'
+                КонецПериода: '2023-07-01T23:00:00'
+                Режим: Детально
       parameters:
         - name: node
           in: path
@@ -5649,12 +5672,36 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                Параметры:
-                  Дата: '2023-03-21T10:00:00'
-                  УчитыватьВремя: true
+              
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
-                  - 8d7850b3-8bc9-11e7-86a2
+                  type: array
+                  items:      
+                    type: string
+                    maxLength: 100
+                    example: a4d87e2b-3813-11ee-8e4a-b42e991713ac
+                    description: Публичный идентификатор Сбережения
+                Параметры:
+                  type: object
+                  properties:
+                    Дата:
+                      type: string
+                      format: data-time
+                      description: 'Дата на которую нужно получить остатки'
+                    УчитыватьВремя:
+                        type: boolean
+                        description: >-
+                              если УчитыватьВремя - true, тогда будут выводиться остатки с учётом времени,а не на конец дня.
+                        example: false    
+                    
+            example:
+              Параметры:
+                Дата: '2023-03-21T10:00:00'
+                УчитыватьВремя: true
+              Идентификатор:
+                - 8d7850b3-8bc9-11e7-86a2
       parameters:
         - name: node
           in: path
@@ -5779,12 +5826,30 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              example:
-                Параметры:
-                  Дата: '2023-03-21T10:00:00'
+              type: object              
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
-                  - 8d7850b3-8bc9-11e7-86a2
+                  type: array
+                  items:      
+                    type: string
+                    maxLength: 100
+                    example: a4d87e2b-3813-11ee-8e4a-b42e991713ac
+                    description: Публичный идентификатор Сбережения
+                Параметры:
+                  type: object
+                  properties:
+                    Дата:
+                      type: string
+                      format: data-time
+                      description: 'Дата на которую нужно получить актуальный график'
+              
+            example:
+              Параметры:
+                Дата: '2023-03-21T10:00:00'
+              Идентификатор:
+                - 8d7850b3-8bc9-11e7-86a2
       parameters:
         - name: node
           in: path
@@ -6576,11 +6641,21 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              example:
+              type: object              
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
-                  - a4d87e2b-3813-11ee-8e4a-b42e991713ac
-                  - 'null'
+                  type: array
+                  items:      
+                    type: string
+                    maxLength: 100
+                    example: a4d87e2b-3813-11ee-8e4a-b42e991713ac
+                    description: Публичный идентификатор графика Сбережения
+            example:
+              Идентификатор:
+                - a4d87e2b-3813-11ee-8e4a-b42e991713ac
+                - 'null'
       parameters:
         - name: node
           in: path
