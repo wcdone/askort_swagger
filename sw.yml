@@ -16917,20 +16917,14 @@ paths:
                   description: Перечисление АЭ_ВидыОперацийОтражениеПрочихДоходов, только для batch метода
                   example: РасчетыВПользуТретьихЛиц
                 Организация:
-                  type: string
-                  maxLength: 12
-                  example: '2263018717'
-                  description: ИНН организации
+                  $ref: '#/components/schemas/Организация'
                 ПодразделениеОрганизации:
-                  type: string
-                  maxLength: 100
-                  example: '3'
-                  description: Публичный идентификатор
+                  $ref: '#/components/schemas/ПодразделениеОрганизации'  
                 Контрагент:
                   type: string
                   maxLength: 100
                   example: 14438b29-8562-4027-9138-5238da9b86b9Тест3
-                  description: Публичный идентификатор
+                  description: Публичный идентификатор контрагента
                 Номенклатура:
                   type: string
                   maxLength: 100
