@@ -11669,6 +11669,13 @@ paths:
                         minimum: 0.01
                         example: 10000
                         description: Сумма планового платежа по графику платежей.
+                      СуммаРасход:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 100
+                        description: Сумма плановой выплаты по графику платежей.
                     required:
                       - Контрагент
                       - Займ
@@ -11701,7 +11708,14 @@ paths:
                         maxLength: 15
                         minimum: 0.01
                         example: 10000
-                        description: Сумма планового платежа по графику платежей.
+                        description: Сумма планового платежа по графику платежей.  
+                      СуммаРасход:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 100
+                        description: Сумма плановой выплаты по графику платежей.  
                     required:
                       - Контрагент
                       - Займ
@@ -11727,14 +11741,28 @@ paths:
                         example: '2020-01-02T00:00:00'
                         type: string
                         format: data-time
-                        description: Плановая дата платежа по графику платежей.
+                        description: Плановая дата платежа
                       СуммаПлатежа:
                         type: number
                         format: double
                         maxLength: 15
                         minimum: 0.01
                         example: 10000
-                        description: Сумма планового платежа по графику платежей.
+                        description: Сумма планового платежа 
+                      СуммаПриход:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма планового платежа = СуммаПлатежа  
+                      СуммаРасход:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 100
+                        description: Сумма плановой выплаты
                       ОтраженоВРегламентированномУчете:
                         type: boolean
                         description: >-
