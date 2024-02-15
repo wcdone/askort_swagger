@@ -1,3 +1,4 @@
+                Номер:
                   type: string
                   maxLength: 150
                   example: Бензин
@@ -151,6 +152,7 @@
 
 
 
+------------------------------------------------------------------------------------------------
 
 
   '/contractor_relation_contractors_create/v1.0/{node}':
@@ -242,5 +244,59 @@
         '404':
           description: URL не найден
 
-
+------------------------------------------------------------------------------------------------
  
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан   
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация'
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'    
+                    Дата:
+                      example: '2023-03-31T09:15:28.032+00:00'
+                      type: string
+                      format: data-time
+                      description: Дата документа
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент'
+                    Займ:
+                      $ref: '#/components/schemas/Займ'
+                      description: Публичный идентификатор
+            
+                Статусы:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Статус:
+                        $ref: '#/components/schemas/Идентификатор'  
+                        example: ОтсутствиеДокументовИДоговора
+                        description: >-
+                          Публичный идентификатор  Статусы займов  
+                      Подстатус:
+                        $ref: '#/components/schemas/Идентификатор'  
+                        example: СостояниеСтатусовЗаймовподстатусОтсутствие документов и договора
+                        description: >-
+                          Публичный идентификатор  Состояния статусов займов 
+                      Действует:
+                        type: boolean
+                        description: >-
+                              Флаг "Действует" в умфо
+                        example: false
+                      Изменять:
+                        type: boolean
+                        description: >-
+                              Флаг "Изменять" в умфо
+                        example: false    
+                                      
+                    required:
+                      - Статус       
+              required:
+                - Идентификатор
+                - Реквизиты
+                - Статусы
