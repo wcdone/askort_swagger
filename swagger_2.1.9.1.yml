@@ -30,7 +30,7 @@ tags:
   - name: Выдача займа
   - name: Платежи, Погашения, Начисления займа
   - name: Общие
-  - name: ПрочиеОперации
+  - name: Прочие операции
   - name: Сбережения
   - name: КПК
   - name: Получение информации по займам
@@ -14766,7 +14766,7 @@ paths:
   '/dossier_loan_create/v1.0/{node}':
     post:
       tags:
-        - ПрочиеОперации
+        - Прочие операции
       summary: Создать Досье по займу
       requestBody:
         content:
@@ -14812,7 +14812,7 @@ paths:
   '/dossier_contractor_create/v1.0/{node}':
     post:
       tags:
-        - ПрочиеОперации
+        - Прочие операции
       summary: Создать Досье по контрагенту
       requestBody:
         content:
@@ -14848,7 +14848,7 @@ paths:
   '/cession_loan_sale_create/v1.0/{node}':
     post:
       tags:
-        - ПрочиеОперации
+        - Прочие операции
       summary: Создать уступку прав требования
       description: Переуступка прав требований по займу предоставленному
       requestBody:
@@ -14911,7 +14911,7 @@ paths:
   '/cession_loan_purchase_create/v1.0/{node}':
     post:
       tags:
-        - ПрочиеОперации
+        - Прочие операции
       summary: Создать Приобретение прав требований по займам
       description: >-
         В 1С создаются объекты: Приобретение прав требований по займам. Только в режиме фиксированная сумма
@@ -15065,11 +15065,10 @@ paths:
   '/loan_statistics_create/v1.0/{node}':
     post:
       tags:
-        - ПрочиеОперации
+        - Прочие операции
       summary: Создать мемордер по статистике
       description: >-
-        Создается документ Корректировка взаиморасчетов по займам
-        предоставленным, который порождает начисления.
+        Создается документ мемордер для загрузки статистики
       requestBody:
         content:
           application/json:
@@ -15211,9 +15210,121 @@ paths:
                 Займы:
                   type: array
                   description: >-
-                    Аналогично методу "Создание договора займа предоставленного" ()loan_create)
+                    Аналогично методу "Создание договора займа предоставленного" (loan_create)
                   items:
                     type: object
+                ПогашенияЗайма:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать погашения по займу предоставленному" (loan_repayment_create)
+                  items:
+                    type: object
+                ПогашенияЗаймаМногострочные:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать погашение займов многострочное" (loan_repayment_multiple_create)
+                  items:
+                    type: object
+                ПогашенияЗаймаПроизвольные:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать проивзольное погашение по займу предоставленному" (loan_repayment_arbitrary_create)
+                  items:
+                    type: object
+                ПоступлениеНаСчетТекущихРасчетов:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать поступление на счет текущих расчетов" (loan_receipt_on_account_create)
+                  items:
+                    type: object
+                НачисленияПоЗайму:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать начисления по займу предоставленному" (loan_accruals_create)
+                  items:
+                    type: object
+                ОтражениеПрочихДоходовВзаиморасчетыДоходыНДС:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать Отражение прочих доходов взаиморасчеты доходы НДС" (other_income_mutual_settlement_vat_create)
+                  items:
+                    type: object
+                ОтражениеПрочихДоходовРасчетыВПользуТретьихЛиц:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать Отражение прочих доходов Расчеты в пользу третьих лиц" (other_income_third_person_create)
+                  items:
+                    type: object
+                ПередачиПравТребованийЗаймаПредоставленного:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать уступку прав требования" (cession_loan_sale_create)
+                  items:
+                    type: object
+                ПролонгацииЗаймовПредоставленных:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать ДС на пролонгацию по займу предоставленному" (loan_prolongation_create)
+                  items:
+                    type: object
+                УвеличенияСуммЗаймовПредоставленных:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать ДС для увеличения суммы займа (транш) по займу предоставленному" (loan_tranche_create)
+                  items:
+                    type: object
+                РеструктуризацииЛьготныеПериодыЗаймовПредоставленных:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать ДС реструктуризация льготный период" (loan_grace_prolongation_create)
+                  items:
+                    type: object
+                СписанияЗаймов:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать списание(прощение) займов" (loan_cancel_create)
+                  items:
+                    type: object
+                ДополнительныеГрафикиПлатежей:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать дополнительный график платежей" (loan_schedule_additional_create)
+                  items:
+                    type: object
+                СтатистикаПоЗаймамПредоставленным:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать мемордер по статистике" (loan_statistics_create)
+                  items:
+                    type: object 
+                ВступленияПайщиковСписком:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать вступление пайщиков списком" (shareholder_accept_create_multi)
+                  items:
+                    type: object 
+                
+                Сбережения:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать сбережение (loan_deposit_create )
+                  items:
+                    type: object
+                НачисленияПоСбережению:
+                  type: array
+                  description: >-
+                    Аналогично методу "Создать начисления по сбережению" (loan_deposit_accruals_create )
+                  items:
+                    type: object 
+
+                ЗаймыОбновление:
+                  type: array
+                  description: >-
+                    Аналогично методу "Обновление займа предоставленного" (loan_update)
+                  items:
+                    type: object
+                  
+                
                 ВыдачиЗаймов:
                   type: array
                   description: >-
@@ -15295,7 +15406,7 @@ paths:
       description: Отражение прочих доходов по продаже дополнительных продуктов с видом операции "Взаиморасчеты, доходы, НДС". Создается документ Отражение прочих доходов (доп. продуктов).
       tags:
       
-        - ПрочиеОперации
+        - Прочие операции
       parameters:
         - $ref: '#/components/parameters/node'
       requestBody:
@@ -15473,7 +15584,7 @@ paths:
       summary: Создать Отражение прочих доходов Расчеты в пользу третьих лиц 
       description: Отражение прочих доходов по продаже дополнительных продуктов с видом операции "Взаиморасчеты, доходы, НДС". Создается документ Отражение прочих доходов (доп. продуктов).
       tags:
-         - ПрочиеОперации
+         - Прочие операции
       parameters:
         - $ref: '#/components/parameters/node'
       requestBody:
@@ -15703,7 +15814,7 @@ paths:
   '/early_repayment_application_create/v1.0/{node}':
     post:
       tags:
-        - ПрочиеОперации
+        - Прочие операции
       summary: >-
         Создать заявление на досрочное погашение
       requestBody:
@@ -15765,7 +15876,7 @@ paths:
   '/add_files/v1.0/{node}':
     post:
       tags:
-        - ПрочиеОперации
+        - Прочие операции
       summary: Присоединение файла
       requestBody:
         content:
@@ -16148,7 +16259,7 @@ paths:
   '/loan_mpl_request/v1.0/{node}':
     post:
       tags:
-        - ПрочиеОперации 
+        - Прочие операции 
       summary: Получить расчет МПЛ
       description: Метод возвращает данные из регистра по расчитанному МПЛ на период в разрезе организациии
       parameters:
@@ -16622,8 +16733,8 @@ components:
               - НачалоПериода
               - КонецПериода
               - Сумма
-        ГрафикПлатежейВнешнейСистемы:
-          $ref: '#/components/schemas/ГрафикПлатежейВнешнейСистемы'
+        #ГрафикПлатежейВнешнейСистемы:
+          #$ref: '#/components/schemas/ГрафикПлатежейВнешнейСистемы'
 
     ВидыНачисленийДляОбособленногоУчетаПениШтрафов: #$ref: '#/components/schemas/ВидыНачисленийДляОбособленногоУчетаПениШтрафов'
       description: при наличии массива и при включенной функциональной опции АЭ_ИспользоватьОбособленныйУчетВидовНачисленийВРеглУчете производится создание отдельных договоров для выбранных видов начисления и заполненеие регистра аналитика взаиморасчетов по видам начислений.
