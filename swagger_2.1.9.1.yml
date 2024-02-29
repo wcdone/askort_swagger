@@ -10334,6 +10334,7 @@ paths:
     post:
       tags:
         - Выдача займа
+        - Расходный кассовый ордер
       summary: Выдача по займу предоставленному через кассу 
       description: >-
         Метод делает выдачу займа через РасходныеКассовыеОрдера
@@ -10433,6 +10434,7 @@ paths:
     post:
       tags:
         - Платежи, Погашения, Начисления займа
+        - Приходный кассовый ордер
       summary: Погашение по займу предоставленному через кассу 
       description: >-
         Создается документ Поступление наличных (ПКО) которым производится погашение займа.
@@ -10547,6 +10549,7 @@ paths:
     post:
       tags:
         - Сбережения
+        - Приходный кассовый ордер
       summary: Прием денег в кассу по сбережению(cash_payment_create)
       description: >-
         Создаёт документ ПриходныйКассовыйОрдер. Вид операции ПриемДенегПоСбережению, формируется табличная часть с одной строкой - приход по ОД по указанному сбережению
@@ -10575,10 +10578,7 @@ paths:
                       $ref: '#/components/schemas/ПодразделениеОрганизации'
 
                     ВидОперации:
-                      type: string
-                      enum:
-                        - ПриемДенегПоСбережению
-                      description: Перечисление АЭ_ВидыОперацийПКО
+                      $ref: '#/components/schemas/ВидОперации' 
                       example: ПриемДенегПоСбережению
 
                     Дата:
@@ -14609,31 +14609,74 @@ paths:
   '/cash_issue_create/v1.0/{node}':
     post:
       tags:
-        - Хозяйственная деятельность 
+        - Хозяйственная деятельность
+        - Расходный кассовый ордер 
       summary: >-
-        Создать Расходный кассовый ордер 
+        Создать Расходный кассовый ордер с видом операции ВыдачаПодотчетномуЛицу
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example:
-                Идентификатор: 0f5ba638-cfc8-11ed-aa31-00090ffe0001
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан
+                  example: "0f5ba62a-cfc8-11ed-aa31-00090ffe0001"
                 Реквизиты:
-                  ВидОперации: ВыплатаЗаработнойПлатыРаботнику
-                  Дата: '2023-01-12T12:40:28'
-                  Номер: '0011847'
-                  Организация: '7714103163'
-                  ПодразделениеОрганизации: 8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd
-                  Касса: Основная касса
-                  Контрагент: 004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ
-                  СуммаПлатежа: 30000
-                  СтатьяДвиженияДенежныхСредств: ОплатаТруда
-                  Выдать: Выдать
-                  ПоДокументу: По документу
-                  Основание: Основание
-                  Комментарий: Комментарий
-                  Приложение: Приложение
+                  type: object
+                  properties:
+                    ВидОперации:
+                      type: string
+                      enum:
+                        - Инкассация
+                        - ВыплатаЗаработнойПлатыРаботнику
+                        - ВыдачаПодотчетномуЛицу
+                      description: Перечисление ВидыОперацийРКО
+                      example: "ВыдачаПодотчетномуЛицу"
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2023-01-10T10:40:28"
+                    Номер:
+                      type: string
+                      example: "0011849"
+                    Организация:
+                      $ref: '#/components/schemas/Организация'
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Касса:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор кассы, предварительно регистрируется в УМФО
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент'
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      example: 30000
+                    НазначениеПодотчетныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      example: "8048c8e8-70e2-11e7-8703-94de80632f62"
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      example: "fcd29007-0cc3-11e8-a65d-408d5c8f4986"
+                    Выдать:
+                      type: string
+                      example: "Выдать"
+                    ПоДокументу:
+                      type: string
+                      example: "По документу"
+                    Основание:
+                      type: string
+                      example: "Основание"
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+                    Приложение:
+                      type: string
+                      example: "Приложение"
+              required:
+                - Идентификатор
+                - Реквизиты
       parameters:
 
         - name: node
@@ -14643,20 +14686,297 @@ paths:
           required: true
       responses:
         '200':
-          description: Successful response
+          description: Успешный ответ
           content:
-            application/json: {}
-  "/cash_payment_create/v1.0/{node} ":
+            application/json:
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  РасходныеКассовыеОрдера:
+                    - Идентификатор: 0f5ba638-cfc8-11ed-aa31-00090ffe0001
+                      ИдентификаторВладельца: 004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+  '/cash_issue_create/v1.0/{node} ':
     post:
       tags:
-        - Хозяйственная деятельность 
+        - Хозяйственная деятельность
+        - Расходный кассовый ордер 
       summary: >-
-        Создать Приходный кассовый ордер 
+        Создать Расходный кассовый ордер с видом операции ВыдачаЗаработнойПлатыРаботнику
       requestBody:
         content:
           application/json:
             schema:
               type: object
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан
+                  example: "0f5ba638-cfc8-11ed-aa31-00090ffe0001"
+                Реквизиты:
+                  type: object
+                  properties:
+                    ВидОперации:
+                      type: string
+                      enum:
+                        - Инкассация
+                        - ВыплатаЗаработнойПлатыРаботнику
+                        - ВыдачаПодотчетномуЛицу
+                      description: Перечисление ВидыОперацийРКО
+                      example: "ВыплатаЗаработнойПлатыРаботнику"
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2023-01-12T12:40:28"
+                    Номер:
+                      type: string
+                      example: "0011847"
+                    Организация:
+                      $ref: '#/components/schemas/Организация'
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Касса:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор кассы, предварительно регистрируется в УМФО
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент'
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      example: 30000
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      example: "ОплатаТруда"
+                    Выдать:
+                      type: string
+                      example: "Выдать"
+                    ПоДокументу:
+                      type: string
+                      example: "По документу"
+                    Основание:
+                      type: string
+                      example: "Основание"
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+                    Приложение:
+                      type: string
+                      example: "Приложение"
+              required:
+                - Идентификатор
+                - Реквизиты
+      parameters:
+
+        - name: node
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  РасходныеКассовыеОрдера:
+                    - Идентификатор: 0f5ba638-cfc8-11ed-aa31-00090ffe0001
+                      ИдентификаторВладельца: 004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+  '/cash_issue_create/v1.0/{node}  ':
+    post:
+      tags:
+        - Хозяйственная деятельность
+        - Расходный кассовый ордер 
+      summary: >-
+        Создать Расходный кассовый ордер с видом операции Инкассация
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан
+                  example: "0f5ba638-cfc8-11ed-aa31-00090ffe0001"
+                Реквизиты:
+                  type: object
+                  properties:
+                    ВидОперации:
+                      type: string
+                      enum:
+                        - Инкассация
+                        - ВыплатаЗаработнойПлатыРаботнику
+                        - ВыдачаПодотчетномуЛицу
+                      description: Перечисление ВидыОперацийРКО
+                      example: "Инкассация"
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2023-01-11T11:40:28"
+                    Номер:
+                      type: string
+                      example: "0011848"
+                    Организация:
+                      $ref: '#/components/schemas/Организация'
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Касса:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор кассы, предварительно регистрируется в УМФО
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      example: 20000
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      example: "fcd28fea-0cc3-11e8-a65d-408d5c8f4986"
+                    Выдать:
+                      type: string
+                      example: "Выдать"
+                    ПоДокументу:
+                      type: string
+                      example: "По документу"
+                    Основание:
+                      type: string
+                      example: "Основание"
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+                    Приложение:
+                      type: string
+                      example: "Приложение"
+
+              required:
+                - Идентификатор
+                - Реквизиты
+      parameters:
+
+        - name: node
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  РасходныеКассовыеОрдера:
+                    - Идентификатор: 0f5ba638-cfc8-11ed-aa31-00090ffe0001
+                      ИдентификаторВладельца: 004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  "/cash_payment_create/v1.0/{node} ":
+    post:
+      tags:
+        - Хозяйственная деятельность
+        - Приходный кассовый ордер 
+        
+      summary: >-
+        Создать Приходный кассовый ордер с видом операции Инкассация 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:                
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан 
+                  example: "0f5ba63d-cfc8-11ed-aa31-00090ffe0001"
+                Реквизиты:
+                  type: object
+                  properties:
+                    ВидОперации:
+                      $ref: '#/components/schemas/ВидОперации'
+                      example: "Инкассация"
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2023-01-13T13:40:28"
+                    Номер:
+                      type: string
+                      example: "001257"
+                    
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Касса:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор кассы, предварительно регистрируется в умфо                     
+
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    ДоговорКонтрагента:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор договора контрагента
+                      example: "b3b9e4f9-d638-11e9-8229-50e549b16b6b"
+                    ПодразделениеКт:
+                      type: string
+                      example: "Основное"
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      example: "fcd29007-0cc3-11e8-a65d-408d5c8f4986"
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      example: 30000
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'  
+
+                    ПринятоОт:
+                      type: string
+                      description: От кого принят платёж
+                      example: Иванова Ивана И.  
+                    Основание:
+                      type: string
+                      description: Основание создания ПКО
+                      example: Основание  
+                    Приложение:
+                      type: string
+                      description: Приложение
+                      example: Приложение 
+
               example:
                 Идентификатор: 0f5ba63f-cfc8-11ed-aa31-00090ffe0001
                 Реквизиты:
@@ -14685,6 +15005,102 @@ paths:
           description: Successful response
           content:
             application/json: {}
+
+
+  "/cash_payment_create/v1.0/{node}   ":
+    post:
+      tags:
+        - Хозяйственная деятельность
+        - Приходный кассовый ордер 
+        
+      summary: Создать Приходный кассовый ордер с видом операции ВозвратОтПодотчетногоЛица
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан
+                  example: "0f5ba63f-cfc8-11ed-aa31-00090ffe0001"
+                Реквизиты:
+                  type: object
+                  properties:
+                    ВидОперации:
+                      $ref: '#/components/schemas/ВидОперации'
+                      example: "ВозвратОтПодотчетногоЛица"
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2023-01-14T14:40:28"
+                    Номер:
+                      type: string
+                      example: "001258"
+                    Организация:
+                      $ref: '#/components/schemas/Организация'
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Касса:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор кассы, предварительно регистрируется в УМФО
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент'
+                    НазначениеПодотчетныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      example: "8048c8e8-70e2-11e7-8703-94de80632f62"
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      example: 30000
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+                    ПринятоОт:
+                      type: string
+                      description: От кого принят платёж
+                      example: Иванова Ивана И.
+                    Основание:
+                      type: string
+                      description: Основание создания ПКО
+                      example: Основание
+                    Приложение:
+                      type: string
+                      description: Приложение
+                      example: Приложение
+              required:
+                - Идентификатор
+                - Реквизиты
+              example:
+                Идентификатор: 0f5ba63f-cfc8-11ed-aa31-00090ffe0001
+                Реквизиты:
+                  ВидОперации: ВозвратОтПодотчетногоЛица
+                  Дата: '2023-01-14T14:40:28'
+                  Номер: '001258'
+                  Организация: '7714103163'
+                  ПодразделениеОрганизации: 8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd
+                  Касса: Основная касса
+                  Контрагент: 004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ
+                  НазначениеПодотчетныхСредств: 8048c8e8-70e2-11e7-8703-94de80632f62
+                  СуммаПлатежа: 30000
+                  Комментарий: Коммент
+                  ПринятоОт: Принято от
+                  Основание: Основание
+                  Приложение: Приложение
+      parameters:
+
+        - name: node
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+
+
 
   '/customer_agreement_create/v1.0/{node}':
     post:
@@ -16420,6 +16836,15 @@ components:
       type: string
       maxLength: 100
       example: 14438b29-8562-4027-9138-5238da9b86b9Тест3
+    
+    ВидОперации: # $ref: '#/components/schemas/ВидОперации'            
+      type: string                     
+      enum:
+        - ПриемДенегПоСбережению
+        - Инкассация
+        - ВозвратОтПодотчетногоЛица
+      description: Перечисление АЭ_ВидыОперацийПКО
+      example: "Инкассация"
     ОсновнойЗайм: # $ref: '#/components/schemas/ОсновнойЗайм'
       $ref: '#/components/schemas/Идентификатор' 
       example: 33338b29-8562-4027-9138-5238da9b86b9-ФинПродукт
