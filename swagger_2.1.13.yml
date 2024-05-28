@@ -7339,12 +7339,7 @@ paths:
                     Займ: 8d7850b3-8bc9-11e7-86a2
                     СуммаПриход: 20000
       parameters:
-
-        - name: node
-          in: path
-          schema:
-            type: string
-          required: true
+        - $ref: '#/components/parameters/node'
       responses:
         '200':
           description: OK
