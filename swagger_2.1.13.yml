@@ -11249,6 +11249,653 @@ paths:
           $ref: '#/components/responses/404'
 
 
+  '/bank_payment_create/v1.0/{node}':
+    post:
+      tags:
+        - Банк
+        - Поступление на расчетный счет
+      summary: Поступление на расчетный счет (ПрочееПоступление) 
+      description: >-
+        Создать документ Поступление на расчетный счет с видом операции (ПрочееПоступление)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийПоступлениеДенежныхСредств
+                  enum:
+                    - ПрочееПоступление
+                    - ПолучениеЗаймаОтКонтрагента
+                    - ПоступлениеПоЗаймамВыданным
+                    - ПрочиеРасчетыСКонтрагентами
+                  example: ПрочееПоступление
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: true
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                                            
+                    ДатаВходящегоДокумента:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата входящего документа об оплате
+                    НомерВходящегоДокумента:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    ОтражатьВОперативномУчете:
+                      type: boolean
+                      description: >-
+                        Управлет флагом ОтражатьВОперативномУчете. ( true по умолчанию )
+                        false - флаг снят
+                        true - флаг установлен
+                      example: true
+                    НеПодтвержденоВыпискойБанка:
+                      type: boolean
+                      description: >-
+                        Управлет флагом ПодтвержденоВыпискойБанка. ( false по умолчанию )
+                        true - флаг снят
+                        false - флаг установлен
+                      example: false     
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+ 
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+  '/bank_payment_create/v1.0/{node} ':
+    post:
+      tags:
+        - Банк
+        - Поступление на расчетный счет
+        - Сбережения
+      summary: Поступление на расчетный счет (ПолучениеЗаймаОтКонтрагента) 
+      description: >-
+        Создать документ Поступление на расчетный счет с видом операции (ПолучениеЗаймаОтКонтрагента)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийПоступлениеДенежныхСредств
+                  enum:
+                    - ПрочееПоступление
+                    - ПолучениеЗаймаОтКонтрагента
+                    - ПоступлениеПоЗаймамВыданным
+                    - ПрочиеРасчетыСКонтрагентами
+                  example: ПолучениеЗаймаОтКонтрагента
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                                            
+                    ДатаВходящегоДокумента:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата входящего документа об оплате
+                    НомерВходящегоДокумента:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    ОтражатьВОперативномУчете:
+                      type: boolean
+                      description: >-
+                        Управлет флагом ОтражатьВОперативномУчете. ( true по умолчанию )
+                        false - флаг снят
+                        true - флаг установлен
+                      example: true
+                    НеПодтвержденоВыпискойБанка:
+                      type: boolean
+                      description: >-
+                        Управлет флагом ПодтвержденоВыпискойБанка. ( false по умолчанию )
+                        true - флаг снят
+                        false - флаг установлен
+                      example: false     
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+                РасшифровкаПлатежа:
+                  type: array
+                  items:
+                    type: object
+                    properties:                
+                      ВидПлатежа:
+                        type: string
+                        description:  Вид платежа
+                          - ОсновнойДолг
+                          - Проценты
+                        example: ОсновнойДолг
+                      Сбережение:
+                        $ref: '#/components/schemas/Сбережение'  
+                      СтатьяДвиженияДенежныхСредств:
+                        $ref: '#/components/schemas/Идентификатор'
+                        description: Публичный идентификатор статьи движения денежных средств, предварительно регистрируется в умфо                     
+
+                      СуммаПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма платежа
+                    required:
+                      - ВидПлатежа
+                      - Сбережение
+                      - СтатьяДвиженияДенежныхСредств
+                      - СуммаПлатежа
+ 
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/bank_payment_create/v1.0/{node}  ':
+    post:
+      tags:
+        - Банк
+        - Поступление на расчетный счет
+        - Платежи, Погашения, Начисления займа
+      summary: Поступление на расчетный счет (ПоступлениеПоЗаймамВыданным) 
+      description: >-
+        Создать документ Поступление на расчетный счет с видом операции (ПоступлениеПоЗаймамВыданным)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийПоступлениеДенежныхСредств
+                  enum:
+                    - ПрочееПоступление
+                    - ПолучениеЗаймаОтКонтрагента
+                    - ПоступлениеПоЗаймамВыданным
+                    - ПрочиеРасчетыСКонтрагентами
+                  example: ПоступлениеПоЗаймамВыданным
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                                            
+                    ДатаВходящегоДокумента:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата входящего документа об оплате
+                    НомерВходящегоДокумента:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    ОтражатьВОперативномУчете:
+                      type: boolean
+                      description: >-
+                        Управлет флагом ОтражатьВОперативномУчете. ( true по умолчанию )
+                        false - флаг снят
+                        true - флаг установлен
+                      example: true
+                    НеПодтвержденоВыпискойБанка:
+                      type: boolean
+                      description: >-
+                        Управлет флагом ПодтвержденоВыпискойБанка. ( false по умолчанию )
+                        true - флаг снят
+                        false - флаг установлен
+                      example: false     
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+                РасшифровкаПлатежа:
+                  type: array
+                  items:
+                    type: object
+                    properties:                
+                      ВидПлатежа:
+                        type: string
+                        description:  Вид платежа
+                          - ОсновнойДолг
+                          - Проценты
+                          - ПрочиеДоходы
+                        example: ПрочиеДоходы
+                      Займ:
+                        $ref: '#/components/schemas/Займ'  
+                      СтатьяДвиженияДенежныхСредств:
+                        $ref: '#/components/schemas/Идентификатор'
+                        description: Публичный идентификатор статьи движения денежных средств, предварительно регистрируется в умфо                     
+                      ВидНачисления:
+                        $ref: '#/components/schemas/Идентификатор'
+                        description: Публичный идентификатор вида начисления, передаётся при виде платежа ПрочиеДоходы, предварительно регистрируется в умфо                     
+                  
+                      СуммаПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма платежа
+                    required:
+                      - ВидПлатежа
+                      - Займ
+                      - СтатьяДвиженияДенежныхСредств
+                      - СуммаПлатежа
+ 
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/bank_payment_create/v1.0/{node}   ':
+    post:
+      tags:
+        - Банк
+        - Поступление на расчетный счет
+      summary: Поступление на расчетный счет (ПрочиеРасчетыСКонтрагентами) 
+      description: >-
+        Создать документ Поступление на расчетный счет с видом операции (ПрочиеРасчетыСКонтрагентами)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийПоступлениеДенежныхСредств
+                  enum:
+                    - ПрочееПоступление
+                    - ПолучениеЗаймаОтКонтрагента
+                    - ПоступлениеПоЗаймамВыданным
+                    - ПрочиеРасчетыСКонтрагентами
+                  example: ПрочиеРасчетыСКонтрагентами
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                                            
+                    ДатаВходящегоДокумента:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата входящего документа об оплате
+                    НомерВходящегоДокумента:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СуммаПлатежа:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    ОтражатьВОперативномУчете:
+                      type: boolean
+                      description: >-
+                        Управлет флагом ОтражатьВОперативномУчете. ( true по умолчанию )
+                        false - флаг снят
+                        true - флаг установлен
+                      example: true
+                    НеПодтвержденоВыпискойБанка:
+                      type: boolean
+                      description: >-
+                        Управлет флагом ПодтвержденоВыпискойБанка. ( false по умолчанию )
+                        true - флаг снят
+                        false - флаг установлен
+                      example: false     
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+                РасшифровкаПлатежа:
+                  type: array
+                  items:
+                    type: object
+                    properties:                                     
+                      ДоговорКонтрагента: 
+                        $ref: '#/components/schemas/Идентификатор'
+                        description: Публичный идентификатор договора контрагента
+ 
+                      СтатьяДвиженияДенежныхСредств:
+                        $ref: '#/components/schemas/Идентификатор'
+                        description: Публичный идентификатор статьи движения денежных средств, предварительно регистрируется в умфо                     
+
+                      СуммаПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма платежа
+                    required:
+                      - ДоговорКонтрагента
+                      - СтатьяДвиженияДенежныхСредств
+                      - СуммаПлатежа
+ 
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
 
   '/loan_cash_repayment_create/v1.0/{node}':
     post:
