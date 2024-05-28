@@ -11532,6 +11532,7 @@ paths:
                 - Идентификатор
                 - Реквизиты
                 - ВидОперации
+                - РасшифровкаПлатежа
       responses:
         '200':
           description: JSON формат
@@ -11706,6 +11707,7 @@ paths:
                 - Идентификатор
                 - Реквизиты
                 - ВидОперации
+                - РасшифровкаПлатежа
       responses:
         '200':
           description: JSON формат
@@ -11864,8 +11866,187 @@ paths:
                     required:
                       - ДоговорКонтрагента
                       - СтатьяДвиженияДенежныхСредств
-                      - СуммаПлатежа
+                      - СуммаПлатежа 
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+                - РасшифровкаПлатежа
+
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+
+  '/payment_order_create/v1.0/{node}':
+    post:
+      tags:
+        - Банк
+        - Платежное поручение
+      summary: Платежное поручение (ПрочиеРасчетыСКонтрагентами) 
+      description: >-
+        Создать документ Платежное поручение с видом операции (ПрочиеРасчетыСКонтрагентами)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийСписаниеДенежныхСредств
+                  enum:
+                    - ПрочиеРасчетыСКонтрагентами
+                    - УплатаНалога
+                    - ПеречислениеЗаработнойПлатыРаботнику
+                    - ПрочееСписание
+                    - ОплатаПоставщику
+                    - ПеречислениеПодотчетномуЛицу
+                  example: ПрочиеРасчетыСКонтрагентами
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    Номер:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+
+                    СчетКонтрагента:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка                      
+                    
+                    ДоговорКонтрагента: 
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор договора контрагента
  
+                    СтавкаНДС:
+                      type: string
+                      enum: 
+                        - НДС18
+                        - НДС18_118
+                        - НДС10
+                        - НДС10_110
+                        - НДС0
+                        - БезНДС
+                        - НДС20
+                        - НДС20_120
+                      example: НДС20
+
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Заполняется автоматически, переопределяется в случае необходимости. Публичный идентификатор статьи движения денежных средств, предварительно регистрируется в умфо                     
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    ВидПлатежа:
+                      type: string
+                      description:  Вид платежа
+                      enum:
+                        - Электронно
+                      example: Электронно
+                    ИдентификаторПлатежа:
+                      type: string
+                      description:  Идентификатор платежа платежа в банковской системе
+                      example: "uid"
+                    КодВидаДохода:
+                      type: string
+                      description: Код вида дохожа
+                      example: "4"
+                    ОчередностьПлатежа:
+                      type: number
+                      format: integer
+                      maxLength: 1
+                      example: 4
+                      description: >-
+                        Очередность платежа. Заполняется автоматически, переопределяется в случае необходимости.
+  
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа. Заполняется автоматически, переопределяется в случае необходимости.
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Дата
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
               required:
                 - Идентификатор
                 - Реквизиты
@@ -11884,7 +12065,836 @@ paths:
                 ВнешниеДанные: null
                 КоличествоОбработанныхОбъектов: 1
                 Данные:
-                  ПоступленияНаРасчетныйСчет:
+                  ПлатежныеПоручения:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/payment_order_create/v1.0/{node} ':
+    post:
+      tags:
+        - Банк
+        - Платежное поручение
+      summary: Платежное поручение (ОплатаПоставщику) 
+      description: >-
+        Создать документ Платежное поручение с видом операции (ОплатаПоставщику)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийСписаниеДенежныхСредств
+                  enum:
+                    - ПрочиеРасчетыСКонтрагентами
+                    - УплатаНалога
+                    - ПеречислениеЗаработнойПлатыРаботнику
+                    - ПрочееСписание
+                    - ОплатаПоставщику
+                    - ПеречислениеПодотчетномуЛицу
+                  example: ОплатаПоставщику
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    Номер:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+
+                    СчетКонтрагента:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка                      
+                    
+                    ДоговорКонтрагента: 
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор договора контрагента
+ 
+                    СтавкаНДС:
+                      type: string
+                      enum: 
+                        - НДС18
+                        - НДС18_118
+                        - НДС10
+                        - НДС10_110
+                        - НДС0
+                        - БезНДС
+                        - НДС20
+                        - НДС20_120
+                      example: НДС20
+
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Заполняется автоматически, переопределяется в случае необходимости. Публичный идентификатор статьи движения денежных средств, предварительно регистрируется в умфо                     
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    ВидПлатежа:
+                      type: string
+                      description:  Вид платежа
+                      enum:
+                        - Электронно
+                      example: Электронно
+                    ИдентификаторПлатежа:
+                      type: string
+                      description:  Идентификатор платежа платежа в банковской системе
+                      example: "uid"
+                    КодВидаДохода:
+                      type: string
+                      description: Код вида дохожа
+                      example: "4"
+                    ОчередностьПлатежа:
+                      type: number
+                      format: integer
+                      maxLength: 1
+                      example: 4
+                      description: >-
+                        Очередность платежа. Заполняется автоматически, переопределяется в случае необходимости.
+  
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа. Заполняется автоматически, переопределяется в случае необходимости.
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Дата
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПлатежныеПоручения:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/payment_order_create/v1.0/{node}  ':
+    post:
+      tags:
+        - Банк
+        - Платежное поручение
+      summary: Платежное поручение (ПрочееСписание) 
+      description: >-
+        Создать документ Платежное поручение с видом операции (ПрочееСписание)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийСписаниеДенежныхСредств
+                  enum:
+                    - ПрочиеРасчетыСКонтрагентами
+                    - УплатаНалога
+                    - ПеречислениеЗаработнойПлатыРаботнику
+                    - ПрочееСписание
+                    - ОплатаПоставщику
+                    - ПеречислениеПодотчетномуЛицу
+                  example: ПрочееСписание
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    Номер:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+
+                    СчетКонтрагента:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка                      
+
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Заполняется автоматически, переопределяется в случае необходимости. Публичный идентификатор статьи движения денежных средств, предварительно регистрируется в умфо                     
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    ВидПлатежа:
+                      type: string
+                      description:  Вид платежа
+                      enum:
+                        - Электронно
+                      example: Электронно
+                    ИдентификаторПлатежа:
+                      type: string
+                      description:  Идентификатор платежа платежа в банковской системе
+                      example: "uid"
+                    КодВидаДохода:
+                      type: string
+                      description: Код вида дохожа
+                      example: "4"
+                    ОчередностьПлатежа:
+                      type: number
+                      format: integer
+                      maxLength: 1
+                      example: 4
+                      description: >-
+                        Очередность платежа. Заполняется автоматически, переопределяется в случае необходимости.
+  
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа. Заполняется автоматически, переопределяется в случае необходимости.
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Дата
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПлатежныеПоручения:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/payment_order_create/v1.0/{node}   ':
+    post:
+      tags:
+        - Банк
+        - Платежное поручение
+      summary: Платежное поручение (ПеречислениеПодотчетномуЛицу) 
+      description: >-
+        Создать документ Платежное поручение с видом операции (ПеречислениеПодотчетномуЛицу)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийСписаниеДенежныхСредств
+                  enum:
+                    - ПрочиеРасчетыСКонтрагентами
+                    - УплатаНалога
+                    - ПеречислениеЗаработнойПлатыРаботнику
+                    - ПрочееСписание
+                    - ОплатаПоставщику
+                    - ПеречислениеПодотчетномуЛицу
+                  example: ПеречислениеПодотчетномуЛицу
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    Номер:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+
+                    СчетКонтрагента:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка                      
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Заполняется автоматически, переопределяется в случае необходимости. Публичный идентификатор статьи движения денежных средств, предварительно регистрируется в умфо                     
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    ВидПлатежа:
+                      type: string
+                      description:  Вид платежа
+                      enum:
+                        - Электронно
+                      example: Электронно
+                    ИдентификаторПлатежа:
+                      type: string
+                      description:  Идентификатор платежа платежа в банковской системе
+                      example: "uid"
+                    КодВидаДохода:
+                      type: string
+                      description: Код вида дохожа
+                      example: "4"
+                    ОчередностьПлатежа:
+                      type: number
+                      format: integer
+                      maxLength: 1
+                      example: 4
+                      description: >-
+                        Очередность платежа. Заполняется автоматически, переопределяется в случае необходимости.
+  
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа. Заполняется автоматически, переопределяется в случае необходимости.
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Дата
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПлатежныеПоручения:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/payment_order_create/v1.0/{node}    ':
+    post:
+      tags:
+        - Банк
+        - Платежное поручение
+      summary: Платежное поручение (ПеречислениеЗаработнойПлатыРаботнику) 
+      description: >-
+        Создать документ Платежное поручение с видом операции (ПеречислениеЗаработнойПлатыРаботнику)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийСписаниеДенежныхСредств
+                  enum:
+                    - ПрочиеРасчетыСКонтрагентами
+                    - УплатаНалога
+                    - ПеречислениеЗаработнойПлатыРаботнику
+                    - ПрочееСписание
+                    - ОплатаПоставщику
+                    - ПеречислениеПодотчетномуЛицу
+                  example: ПеречислениеЗаработнойПлатыРаботнику
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    Номер:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+
+                    СчетКонтрагента:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка                      
+                    СтатьяДвиженияДенежныхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Заполняется автоматически, переопределяется в случае необходимости. Публичный идентификатор статьи движения денежных средств, предварительно регистрируется в умфо                     
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    ВидПлатежа:
+                      type: string
+                      description:  Вид платежа
+                      enum:
+                        - Электронно
+                      example: Электронно
+                    ИдентификаторПлатежа:
+                      type: string
+                      description:  Идентификатор платежа платежа в банковской системе
+                      example: "uid"
+                    КодВидаДохода:
+                      type: string
+                      description: Код вида дохожа
+                      example: "4"
+                    ОчередностьПлатежа:
+                      type: number
+                      format: integer
+                      maxLength: 1
+                      example: 4
+                      description: >-
+                        Очередность платежа. Заполняется автоматически, переопределяется в случае необходимости.
+  
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа. Заполняется автоматически, переопределяется в случае необходимости.
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Дата
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПлатежныеПоручения:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/payment_order_create/v1.0/{node}     ':
+    post:
+      tags:
+        - Банк
+        - Платежное поручение
+      summary: Платежное поручение (УплатаНалога) 
+      description: >-
+        Создать документ Платежное поручение с видом операции (УплатаНалога)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                ВидОперации:
+                  type: string
+                  description:  ВидОперации - значения перечисления ВидыОперацийСписаниеДенежныхСредств
+                  enum:
+                    - ПрочиеРасчетыСКонтрагентами
+                    - УплатаНалога
+                    - ПеречислениеЗаработнойПлатыРаботнику
+                    - ПрочееСписание
+                    - ОплатаПоставщику
+                    - ПеречислениеПодотчетномуЛицу
+                  example: УплатаНалога
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                    Управлет состоянием документа.( false по умолчанию )
+                    false - документ создан и проведен 
+                    true - документ будет создан и не проведен
+                  example: false
+          
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата документа
+                    Номер:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер документа об оплате
+                    СчетОрганизации:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+
+                    СчетКонтрагента:
+                      type: object
+                      properties:
+                        НомерСчета:
+                          example: '40702810338060017294'
+                          type: string
+                          description: Номер банковского счета
+                        БИКБанка:
+                          example: '044525225'
+                          type: string
+                          description: БИК банка                      
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма платежа
+                    ВидПлатежа:
+                      type: string
+                      description:  Вид платежа
+                      enum:
+                        - Электронно
+                      example: Электронно
+
+                    ВидНалоговогоОбязательства:
+                      type: string
+                      description:  Значение из перечисления ВидыПлатежейВГосБюджет
+                      enum:
+                        - НалогСам
+                        - Налог
+                        - НалогАкт
+                        - Штраф
+                        - РасходыПоСтрахованиюё
+                        - ПениСам
+                        - ПениАкт
+                        - ПолученоИзФонда
+                        - НеПринято
+                        - Проценты
+                        - ВзносыСвышеПредела
+                        - ВзносыБезСпецоценки
+                        - ГосрегистрацияОрганизацийЧерезМФЦ
+                      example: Налог
+                    Налог:
+                      type: string
+                      description:  Публичный идентификатор из справочика Виды налогов и платежей в бюджет (ВидыНалоговИПлатежейВБюджет) 
+                      example: ЕдиныйНалоговыйПлатеж
+                    ИдентификаторПлатежа:
+                      type: string
+                      description:  Идентификатор платежа платежа в банковской системе
+                      example: "uid"
+                    КодВидаДохода:
+                      type: string
+                      description: Код вида дохожа
+                      example: "4"
+                    ОчередностьПлатежа:
+                      type: number
+                      format: integer
+                      maxLength: 1
+                      example: 4
+                      description: >-
+                        Очередность платежа. Заполняется автоматически, переопределяется в случае необходимости.
+  
+                    НазначениеПлатежа:
+                        type: string
+                        description: Назначение платежа. Заполняется автоматически, переопределяется в случае необходимости.
+                        example: Назначение платежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+
+                  required:
+                    - Дата
+                    - Организация
+                    - СуммаПлатежа
+                    - СчетОрганизации
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ВидОперации
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПлатежныеПоручения:
                     - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
                       ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
                       Статус: 1
@@ -21390,6 +22400,8 @@ components:
                   КорректировкиВзаиморасчетовПоПрочимДоговорам:
                     $ref: "#/components/schemas/body_resp"
                   СписанияСРасчетногоСчета:
+                    $ref: "#/components/schemas/body_resp"
+                  ПлатежныеПоручения:
                     $ref: "#/components/schemas/body_resp"
 
 
