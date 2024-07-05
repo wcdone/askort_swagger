@@ -3020,6 +3020,131 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  type: string
+                  maxLength: 100
+                  example: 047dd205-c04f-4ac8-8b03-60e1456e5d27
+                  description: >-
+                    Уникальный идентификатор объекта залога, если не указан, то
+                    идентификатор будет сгенерирован автоматическина на основе
+                    ссылки созданной в БД  (GUID)                
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация'    
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'   
+                    Дата:
+                      example: '2020-01-01T00:00:00'
+                      type: string
+                      format: data-time
+                      description: Дата документа
+                    ВводОстатков:
+                      type: boolean
+                      description: >-
+                        true - если используется режим ввода остатков
+                      example: true
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+                Пайщики:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                        description: Публичный идентификатор поручителя
+                      НомерПайщика:
+                        type: string
+                        maxLength: 11
+                        example: 111
+                        description: Строка - номер пайщика
+                      АссоциированныйЧленСКПк:
+                        type: boolean
+                        description: АссоциированныйЧленСКПк
+                        example: false
+                      ДатаВступления:
+                        example: '2020-01-01T00:00:00'
+                        type: string
+                        format: data-time
+                        description: Дата вступления
+                      НомерПротоколаЗаседанияПравления:
+                        type: string
+                        maxLength: 11
+                        example: 11
+                        description: Строка - номер протокола заседания правления для вступления
+                      ДатаПротоколаЗаседанияПравления:
+                        example: '2020-01-01T00:00:00'
+                        type: string
+                        format: data-time
+                        description: Дата протокола заседания правления для вступления
+
+                      ДатаИсключения:
+                        example: '2020-01-05T00:00:00'
+                        type: string
+                        format: data-time
+                        description: Дата исключения
+                      НомерПротоколаЗаседанияПравленияИсключения:
+                        type: string
+                        maxLength: 11
+                        example: 11
+                        description: Строка - номер протокола заседания правления для исключения
+                      ДатаПротоколаЗаседанияПравленияИсключения:
+                        example: '2020-01-05T00:00:00'
+                        type: string
+                        format: data-time
+                        description: Дата протокола заседания правления для исключения                    
+                      ПричинаИсключения:
+                        $ref: '#/components/schemas/Идентификатор' 
+                        example: "Добровольное исключение"
+                        description: >-
+                          Публичный идентификатор причины исключения 
+
+                    required:
+                      - Контрагент
+                      
+                Взносы:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                        description: Публичный идентификатор поручителя                      
+                      Сумма:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма взноса                
+                      НеоплаченнаяСумма:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Не оплаченная сумма взноса
+                      ДатаПлатежа:
+                        example: '2020-01-05T00:00:00'
+                        type: string
+                        format: data-time
+                        description: Дата платежа               
+                      ВидЦелевыхСредств:
+                        $ref: '#/components/schemas/Идентификатор' 
+                        
+                        example: "Вступительные взносы"
+                        description: >-
+                          Публичный идентификатор вида взносов
+
+                    required:
+                      - Контрагент
+                      - Сумма
               example:
                 Идентификатор: b1002393-fa88-11eb-8538-50e549b16b6b
                 Реквизиты:
@@ -7339,12 +7464,7 @@ paths:
                     Займ: 8d7850b3-8bc9-11e7-86a2
                     СуммаПриход: 20000
       parameters:
-
-        - name: node
-          in: path
-          schema:
-            type: string
-          required: true
+        - $ref: '#/components/parameters/node'
       responses:
         '200':
           description: OK
