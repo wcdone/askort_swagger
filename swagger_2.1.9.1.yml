@@ -33,6 +33,7 @@ tags:
   - name: Прочие операции
   - name: Сбережения
   - name: КПК
+  - name: Банк
   - name: Получение информации по займам
   - name: Расходный кассовый ордер
   - name: Приходный кассовый ордер
@@ -3014,7 +3015,7 @@ paths:
         - КПК
       summary: Создать вступление пайщиков cписком (shareholder_accept_create_multi)
       description: >-
-        описание
+        Метод создаёт документ "Вступление пайщиков списком"
       requestBody:
         content:
           application/json:
@@ -10952,6 +10953,7 @@ paths:
           $ref: '#/components/responses/404'
 
 
+
   '/loan_bank_repayment_assign/v1.0/{node}':
     post:
       tags:
@@ -11038,6 +11040,812 @@ paths:
         '404':
           $ref: '#/components/responses/404'
 
+
+
+
+
+  '/payment_order_create/v1.0/{node}':
+    post:
+      tags:
+        - Банк
+      summary: Создание платежного поручения (ПрочиеРасчетыСКонтрагентами)
+      description: >-
+        Метод служит для создания Платежного поручения с видом (ПрочиеРасчетыСКонтрагентами)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан 
+                ВидОперации:
+                   $ref: '#/components/schemas/ВидОперацииПлатежноеПоручение'
+                   example: ПрочиеРасчетыСКонтрагентами
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                        true - при создании объекта документ будет создан не проведён
+                        false - по умолчанию
+                  example: false
+                               
+                Реквизиты:
+                  type: object
+                  
+                  required:
+                    - ВидОперации
+                    - Дата
+                    - Организация
+                    - СчетОрганизации
+                    - Контрагент
+                    - ДоговорКонтрагента
+                    - СчетКонтрагента
+                    - СуммаДокумента
+                  properties:
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата списания прощения займов
+                    Номер:
+                      type: string
+                      maxLength: 100
+                      example: 00131_4
+                      description: Номер платежного поручения
+
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    СчетОрганизации:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'      
+
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    
+                    ДоговорКонтрагента:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор, договора контрагента
+                    СчетКонтрагента:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'
+                    СтавкаНДС:
+                      $ref: '#/components/schemas/СтавкаНДС'   
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма документа
+
+                    НазначениеПлатежа:
+                      type: string 
+                      example: Бензин
+                      description: 'НазначениеПлатежа'
+                    ВидПлатежа:
+                      $ref: '#/components/schemas/ВидПлатежаПлатежноеПоручение'
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+
+              required:
+                - ВидОперации
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+  '/payment_order_create/v1.0/{node} ':
+    post:
+      tags:
+        - Банк
+      summary: Создание платежного поручения (УплатаНалога)
+      description: >-
+        Метод служит для создания Платежного поручения с видом (УплатаНалога)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан 
+                ВидОперации:
+                   $ref: '#/components/schemas/ВидОперацииПлатежноеПоручение'
+                   example: УплатаНалога
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                        true - при создании объекта документ будет создан не проведён
+                        false - по умолчанию
+                  example: false
+                               
+                Реквизиты:
+                  type: object
+                  
+                  required:
+                    - ВидОперации
+                    - Дата
+                    - Организация
+                    - СчетОрганизации
+                    - Контрагент
+                    - ДоговорКонтрагента
+                    - СчетКонтрагента
+                    - СуммаДокумента
+                  properties:
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата списания прощения займов
+                    Номер:
+                      type: string
+                      maxLength: 100
+                      example: 00131_4
+                      description: Номер платежного поручения
+
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    СчетОрганизации:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'      
+
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    
+                    ДоговорКонтрагента:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор, договора контрагента
+                    СчетКонтрагента:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'
+                    СтавкаНДС:
+                      $ref: '#/components/schemas/СтавкаНДС'   
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма документа
+
+                    НазначениеПлатежа:
+                      type: string 
+                      example: Бензин
+                      description: 'НазначениеПлатежа'
+                    ВидПлатежа:
+                      $ref: '#/components/schemas/ВидПлатежаПлатежноеПоручение'
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+
+              required:
+                - ВидОперации
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+  '/payment_order_create/v1.0/{node}  ':
+    post:
+      tags:
+        - Банк
+      summary: Создание платежного поручения (ПеречислениеЗаработнойПлатыРаботнику)
+      description: >-
+        Метод служит для создания Платежного поручения с видом (ПеречислениеЗаработнойПлатыРаботнику)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан 
+                ВидОперации:
+                   $ref: '#/components/schemas/ВидОперацииПлатежноеПоручение'
+                   example: ПеречислениеЗаработнойПлатыРаботнику
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                        true - при создании объекта документ будет создан не проведён
+                        false - по умолчанию
+                  example: false
+                               
+                Реквизиты:
+                  type: object
+                  
+                  required:
+                    - ВидОперации
+                    - Дата
+                    - Организация
+                    - СчетОрганизации
+                    - Контрагент
+                    - ДоговорКонтрагента
+                    - СчетКонтрагента
+                    - СуммаДокумента
+                  properties:
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата списания прощения займов
+                    Номер:
+                      type: string
+                      maxLength: 100
+                      example: 00131_4
+                      description: Номер платежного поручения
+
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    СчетОрганизации:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'      
+
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    
+                    ДоговорКонтрагента:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор, договора контрагента
+                    СчетКонтрагента:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'
+                    СтавкаНДС:
+                      $ref: '#/components/schemas/СтавкаНДС'   
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма документа
+
+                    НазначениеПлатежа:
+                      type: string 
+                      example: Бензин
+                      description: 'НазначениеПлатежа'
+                    ВидПлатежа:
+                      $ref: '#/components/schemas/ВидПлатежаПлатежноеПоручение'
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+
+              required:
+                - ВидОперации
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/payment_order_create/v1.0/{node}   ':
+    post:
+      tags:
+        - Банк
+      summary: Создание платежного поручения (ПрочееСписание)
+      description: >-
+        Метод служит для создания Платежного поручения с видом (ПрочееСписание)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан 
+                ВидОперации:
+                   $ref: '#/components/schemas/ВидОперацииПлатежноеПоручение'
+                   example: ПрочееСписание
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                        true - при создании объекта документ будет создан не проведён
+                        false - по умолчанию
+                  example: false
+                               
+                Реквизиты:
+                  type: object
+                  
+                  required:
+                    - ВидОперации
+                    - Дата
+                    - Организация
+                    - СчетОрганизации
+                    - Контрагент
+                    - ДоговорКонтрагента
+                    - СчетКонтрагента
+                    - СуммаДокумента
+                  properties:
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата списания прощения займов
+                    Номер:
+                      type: string
+                      maxLength: 100
+                      example: 00131_4
+                      description: Номер платежного поручения
+
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    СчетОрганизации:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'      
+
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    
+                    ДоговорКонтрагента:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор, договора контрагента
+                    СчетКонтрагента:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'
+                    СтавкаНДС:
+                      $ref: '#/components/schemas/СтавкаНДС'   
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма документа
+
+                    НазначениеПлатежа:
+                      type: string 
+                      example: Бензин
+                      description: 'НазначениеПлатежа'
+                    ВидПлатежа:
+                      $ref: '#/components/schemas/ВидПлатежаПлатежноеПоручение'
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+
+              required:
+                - ВидОперации
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/payment_order_create/v1.0/{node}    ':
+    post:
+      tags:
+        - Банк
+      summary: Создание платежного поручения (ОплатаПоставщику)
+      description: >-
+        Метод служит для создания Платежного поручения с видом (ОплатаПоставщику)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан 
+                ВидОперации:
+                   $ref: '#/components/schemas/ВидОперацииПлатежноеПоручение'
+                   example: ОплатаПоставщику
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                        true - при создании объекта документ будет создан не проведён
+                        false - по умолчанию
+                  example: false
+                               
+                Реквизиты:
+                  type: object
+                  
+                  required:
+                    - ВидОперации
+                    - Дата
+                    - Организация
+                    - СчетОрганизации
+                    - Контрагент
+                    - ДоговорКонтрагента
+                    - СчетКонтрагента
+                    - СуммаДокумента
+                  properties:
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата списания прощения займов
+                    Номер:
+                      type: string
+                      maxLength: 100
+                      example: 00131_4
+                      description: Номер платежного поручения
+
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    СчетОрганизации:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'      
+
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    
+                    ДоговорКонтрагента:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор, договора контрагента
+                    СчетКонтрагента:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'
+                    СтавкаНДС:
+                      $ref: '#/components/schemas/СтавкаНДС'   
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма документа
+
+                    НазначениеПлатежа:
+                      type: string 
+                      example: Бензин
+                      description: 'НазначениеПлатежа'
+                    ВидПлатежа:
+                      $ref: '#/components/schemas/ВидПлатежаПлатежноеПоручение'
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+
+              required:
+                - ВидОперации
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+  '/payment_order_create/v1.0/{node}     ':
+    post:
+      tags:
+        - Банк
+      summary: Создание платежного поручения (ПеречислениеПодотчетномуЛицу)
+      description: >-
+        Метод служит для создания Платежного поручения с видом (ПеречислениеПодотчетномуЛицу)
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор, если пуст, будет создан 
+                ВидОперации:
+                   $ref: '#/components/schemas/ВидОперацииПлатежноеПоручение'
+                   example: ПеречислениеПодотчетномуЛицу
+                НеПроводить:
+                  type: boolean
+                  description: >-
+                        true - при создании объекта документ будет создан не проведён
+                        false - по умолчанию
+                  example: false
+                               
+                Реквизиты:
+                  type: object
+                  
+                  required:
+                    - ВидОперации
+                    - Дата
+                    - Организация
+                    - СчетОрганизации
+                    - Контрагент
+                    - ДоговорКонтрагента
+                    - СчетКонтрагента
+                    - СуммаДокумента
+                  properties:
+                    Дата:
+                      example: '2020-01-02T10:40:28'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата списания прощения займов
+                    Номер:
+                      type: string
+                      maxLength: 100
+                      example: 00131_4
+                      description: Номер платежного поручения
+
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    СчетОрганизации:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'      
+
+                    Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                    
+                    ДоговорКонтрагента:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор, договора контрагента
+                    СчетКонтрагента:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'
+                    СтавкаНДС:
+                      $ref: '#/components/schemas/СтавкаНДС'   
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000
+                      description: Сумма документа
+
+                    НазначениеПлатежа:
+                      type: string 
+                      example: Бензин
+                      description: 'НазначениеПлатежа'
+                    ВидПлатежа:
+                      $ref: '#/components/schemas/ВидПлатежаПлатежноеПоручение'
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+
+              required:
+                - ВидОперации
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступленияНаРасчетныйСчет:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+  '/payment_order_state_request/v1.0/{node}':
+    post:
+      tags:
+        - Банк
+      summary: Получить информацию о статусе платежного поручения
+      description: Возвращает информацию текущем статусе платежного поручения
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 100
+            example:
+              ВнешниеДанные: 155cc441-fb3e-4b9a-a450-661bdc3eae48
+              Параметры:
+                Детально: false
+                НачалоПериода: '2019-03-10T12:00:00'
+                КонецПериода: '2020-05-10T12:00:00'
+              Идентификатор:
+                - '9d09bdd3-b1d8-4e72-b683-21f9e507c747ПП'
+                - 9d09bdd3-b1d8-4e72-b683-21f9e507c747П2П
+                - '12'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                    example: 852a0ca1-103e-42db-bd8b-90f5d8c50cfa
+                  КодРезультата:
+                    type: integer
+                    enum:
+                      - 2
+                      - 0
+                      - 1
+                  ОписаниеРезультата:
+                    type: string
+                    enum:
+                      - 'Запрос выполнен частично, есть отмененные транзакции'
+                      - 'Транзакций не соврешалось, данных к обработке не найдено'
+                      - Запрос успешно выполнен
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                    example: 2
+                  Данные:
+                    type: array
+                    items:
+                      type: object
+                    example:
+                      $ref: >-
+                        #/components/schemas/payment_order_state_request_Body
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
 
 
   '/loan_accruals_create/v1.0/{node}':
@@ -15326,16 +16134,7 @@ paths:
                       description: Флаг включения НДС в сумму
 
                     СтавкаНДС:
-                      type: string
-                      enum: 
-                        - НДС18
-                        - НДС18_118
-                        - НДС10
-                        - НДС10_110
-                        - НДС0
-                        - БезНДС
-                        - НДС20
-                        - НДС20_120
+                      $ref: '#/components/schemas/СтавкаНДС'
                     СуммаНДС:
                       type: number
                       format: double
@@ -16217,16 +17016,7 @@ paths:
                         example: 10000
                         description: Сумма платежа
                       СтавкаНДС:
-                        type: string
-                        enum: 
-                          - НДС18
-                          - НДС18_118
-                          - НДС10
-                          - НДС10_110
-                          - НДС0
-                          - БезНДС
-                          - НДС20
-                          - НДС20_120
+                        $ref: '#/components/schemas/СтавкаНДС'
                       СуммаНДС:
                         type: number
                         format: double
@@ -17198,6 +17988,18 @@ components:
       maxLength: 100
       example: pdl
       description: Публичный идентификатор финансовго продукта
+      
+    СтавкаНДС: # $ref: '#/components/schemas/СтавкаНДС' 
+      type: string
+      enum: 
+        - НДС18
+        - НДС18_118
+        - НДС10
+        - НДС10_110
+        - НДС0
+        - БезНДС
+        - НДС20
+        - НДС20_120
     Комментарий: # $ref: '#/components/schemas/Комментарий'   
       type: string
       maxLength: 100
@@ -17603,7 +18405,32 @@ components:
           - ИнтервалОт
           - ИнтервалДо
           - ПроцентнаяСтавка  
-      
+    ВидОперацииПлатежноеПоручение: # $ref: '#/components/schemas/ВидОперацииПлатежноеПоручение'
+      type: string
+      description: >-
+        Виды операции для создания платежного поручения
+      example: ПрочиеРасчетыСКонтрагентами  
+      enum:
+        - УплатаНалога
+        - ПеречислениеЗаработнойПлатыРаботнику
+        - ПрочееСписание
+        - ОплатаПоставщику
+        - ПеречислениеПодотчетномуЛицу
+        - ПрочиеРасчетыСКонтрагентами
+    
+    ВидПлатежаПлатежноеПоручение: # $ref: '#/components/schemas/ВидПлатежаПлатежноеПоручение'
+      type: string
+      description: >-
+        Виды платежей для платежного поручения
+      example: ПрочиеРасчетыСКонтрагентами  
+      enum:
+        - Электронно
+        - Почтой
+        - Телеграфом
+        - Срочно
+    
+    
+    
     external_data:
       type: string
       description: >-
@@ -19421,6 +20248,37 @@ components:
             КонтрагентПредставление: ИП Один Один Один123
           Взаиморасчеты: null
         - null
+
+    payment_order_state_request_Body: #/components/schemas/payment_order_state_request_Body
+      example:
+        - Статус: 6
+          Идентификатор: '12'
+          ОшибкиВРамкахТранзакции: данных по идентификатору не найдено
+        - Статус: 4
+          Идентификатор: 0004a992-b47a-4ad1-a733-6d00c890c478
+          ИдентификаторСсылки: 5aa34317-ffda-11e9-954b-1c1b0d3cc92a
+          Состояние:
+            ИдентификаторСсылки: null
+            Представление: Оплачено
+          ДокументФактическойОплаты:
+            Идентификатор: null
+            ИдентификаторСсылки: 5aa34317-ffda-11e9-954b-1c1b0d3cc93a
+            Представление: "Списание с расчетного счета 0000-000004 от 16.07.2024 17:31:07"
+            ДатаСписания: "2024-07-16T17:31:07"
+            СуммаСписания: "10860"
+            НомерВходящегоДокумента: "5"
+            ДатаВходящегоДокумента: "2024-01-02T00:00:00"
+        - Статус: 4
+          Идентификатор: 0004a992-b47a-4ad1-a733-6d00c890c478
+          ИдентификаторСсылки: 5aa34317-ffda-11e9-954b-1c1b0d3cc92a
+          Состояние:
+            ИдентификаторСсылки: null
+            Представление: Подготовлено
+          ДокументФактическойОплаты:
+            Идентификатор: null
+            ИдентификаторСсылки: null
+            Представление: null
+   
     body_resp:
           type: array
           items:
