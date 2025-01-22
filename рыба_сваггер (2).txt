@@ -6,7 +6,7 @@
 
 
 
-                УчитыватьВремя:
+                ИскатьОбъектЗалога:
                   type: boolean
                   description: >-
                         true - Будет осуществлен поиск объекта залога по номеру VIN.
@@ -136,10 +136,9 @@
                       $ref: '#/components/schemas/Комментарий'
 
 
-$ref: '#/components/schemas/Контрагент' 
-$ref: '#/components/schemas/Организация' 
-$ref: '#/components/schemas/ПодразделениеОрганизации'
-$ref: '#/components/schemas/Идентификатор'
+
+
+
                 Идентификатор:
                   $ref: '#/components/schemas/Идентификатор'
                   description: Публичный идентификатор, если пуст, будет создан 
@@ -148,7 +147,6 @@ $ref: '#/components/schemas/Идентификатор'
 
 
 
-              $ref: '#/components/schemas/request_by_id'
 
 
 
@@ -302,35 +300,3 @@ $ref: '#/components/schemas/Идентификатор'
                 - Идентификатор
                 - Реквизиты
                 - Статусы
-
-
-$ref: '#/components/schemas/ВидОперацииСписаниеСРС'
-
-
-                    СтатьяДоходовИРасходов:
-                      $ref: '#/components/schemas/Идентификатор'
-                      example: fcd28fe6-0cc3-11e8-a65d-408d5c8f4986
-                      description: Публичный идентификатор, Статья доходов и расходов
-                    ПодразделениеКт:
-                      $ref: '#/components/schemas/ПодразделениеОрганизации'
-
-
-
-                  $ref: '#/components/schemas/ВидОперацииПоступлениеРС'
-                  example: ПрочееПоступление
-
-
-
-
-      summary: Создать поступление на расчетный счет (ПрочееПоступление)
-      description: >-
-        Метод служит для создания поступление на РС с видом (ПрочееПоступление)
-
-
-
-                    ГруппаКонтрагента:
-                      $ref: '#/components/schemas/Идентификатор'
-                      description: Публичный идентификатор группы справочника Контрагенты
-                    ГруппаФизлица: 
-                      $ref: '#/components/schemas/Идентификатор'
-                      description: Публичный идентификатор группы справочника Физические лица
