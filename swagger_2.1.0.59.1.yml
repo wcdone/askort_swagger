@@ -117,7 +117,7 @@ paths:
                       example: '123456789012'
                       type: string
                       maxLength: 50
-                    
+                   
                     СтранаРождения:
                       $ref: '#/components/schemas/СтраныМира'
                     ОрганРегистрацииДляАдресаПрописки:
@@ -3256,6 +3256,463 @@ paths:
 
 
 
+
+
+
+
+  '/bid_shareholder_accept_create/v1.0/{node}':
+    post:
+      tags:
+      - КПК
+      summary: Создать заявку на вступление пайщика
+      description: Метод создания документа заявка на вступление пайщика
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  required:
+                    - Идентификатор
+                    - Дата
+                    - Организация
+                    - Контрагент
+                  properties:
+                    Дата:
+                      type: string
+                      format: date-time
+                      description: Дата документа (обязательная)
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                      description: >-
+                        Публичный идентификатор контрагента
+                    Состояние:
+                      type: string
+                      description: Идентификатор состояния заявки (по умолчанию "Новая")
+                      $ref: '#/components/schemas/СостояниеЗаявки'
+                      example: Отклонена
+                    ПричинаОтказа:
+                      type: string
+                      description: Идентификатор причины отказа, используется только при состоянии "Отклонена" 
+                    ДатаСостояния:
+                      type: string
+                      format: date-time
+                      description: Дата установки состояния ( по умолчанию совпадает с датой документа)
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+              required:
+                - Реквизиты
+                
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ЗаявкаНаВступлениеПайщика:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+  '/shareholder_accept_create/v1.0/{node}':
+    post:
+      tags:
+      - КПК
+      summary: Создать вступление пайщика
+      description: Метод создания документа вступление пайщика
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  required:
+                    - Организация
+                    - Контрагент
+                    - Дата
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    Дата:
+                      type: string
+                      format: date-time
+                      description: Дата документа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                      description: >-
+                        Публичный идентификатор контрагента,
+                    НомерПайщика:
+                      type: string
+                      description: Номер пайщика 
+                    АссоциированныйЧленСКПК:
+                      type: boolean
+                      description: Ассоциированный член с КПК 
+                    ВидПайщикаСКПК:
+                      type: string
+                      description: Идентификатор вида пайщика 
+                    НомерПротоколаЗаседанияПравления:
+                      type: string
+                      description: Номер протокола заседания правления 
+                    ДатаПротоколаЗаседанияПравления:
+                      type: string
+                      format: date-time
+                      description: Дата протокола заседания правления 
+                    Заявка:
+                      description: Идентификатор заявки на вступление пайщика
+                      $ref: '#/components/schemas/Идентификатор'
+                Взносы:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - Сумма
+                      - ВидЦелевыхСредств
+                    properties:
+                      Сумма:
+                        type: number
+                        format: float
+                        description: Сумма взноса
+                      ВидЦелевыхСредств:
+                        type: string
+                        description: Идентификатор вида целевых средств
+              required:
+                - Реквизиты
+                
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ВступлениеПайщика:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+
+  '/bid_shareholder_exclude_create/v1.0/{node}':
+    post:
+      tags:
+      - КПК
+      summary: Создать заявку на исключение пайщика
+      description: Метод создания документа заявки на исключения пайщика
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  required:
+                    - Дата
+                    - Организация
+                    - Контрагент
+                  properties:
+                    Дата:
+                      example: '2020-01-01T00:00:00'
+                      type: string
+                      format: data-time
+                      description: Дата документа (обязательное поле)
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                      description: >-
+                        Публичный идентификатор контрагента
+                    ПричинаИсключения:
+                      description: Идентификатор идентификатор справочника АЭ_ПричиныИсключенияПайщиков;
+                      $ref: '#/components/schemas/Идентификатор'
+                    Состояние:
+                      type: string
+                      description: Идентификатор состояния заявки на исключение ( по умолчанию "Новая")
+                      $ref: '#/components/schemas/СостояниеЗаявки'
+                      example: Отклонена
+                    ПричинаОтказа:
+                      type: string
+                      example: Скорринг
+                      description: Идентификатор идентификатор справочника АЭ_ПричиныОтказовВыдачиЗаймов, используется при "Отклонена" (не обязательно)
+                    ДатаСостояния:
+                      example: '2020-01-01T00:00:00'
+                      type: string
+                      format: data-time
+                      description: Дата установки состояния заявки (не обязательно, по умолчанию дата документа)
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+              required:
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ЗаявкаНаИсключениеПайщика:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+
+  '/shareholder_exclude_create/v1.0/{node}':
+    post:
+      tags:
+      - КПК
+      summary: Создать исключение пайщика
+      description: Метод создания документа исключения пайщика
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  required:
+                    - Организация
+                    - Контрагент
+                    - Дата
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    Дата:
+                      type: string
+                      format: date-time
+                      description: Дата документа (обязательная)
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                      description: >-
+                        Публичный идентификатор контрагента
+                    ПричинаИсключения:
+                      description: Идентификатор причины исключения 
+                      $ref: '#/components/schemas/Идентификатор'
+                    НомерПротоколаЗаседанияПравления:
+                      type: string
+                      description: Номер протокола заседания правления 
+                    ДатаПротоколаЗаседанияПравления:
+                      type: string
+                      format: date-time
+                      description: Дата протокола заседания правления (не обязательно)
+                    Заявка:
+                      type: string
+                      description: Идентификатор документа заявки на исключение пайщика 
+                      $ref: '#/components/schemas/Идентификатор'
+                Взносы:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - Сумма
+                      - ВидЦелевыхСредств
+                    properties:
+                      Сумма:
+                        type: number
+                        format: float
+                        description: Сумма взноса
+                      ВидЦелевыхСредств:
+                        type: string
+                        description: Идентификатор вида целевых средств
+              required:
+                - Реквизиты
+                - Взносы
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ИсключениеПайщика:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+  '/shareholder_change_information_create/v1.0/{node}':
+    post:
+      tags:
+      - КПК
+      summary: Создать изменение сведений о пайщике
+      description: Метод создания документа изменение сведений о пайщике
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  properties:
+                    Дата:
+                      type: string
+                      format: date-time
+                      description: Дата документа
+                      example: "2021-08-06T09:15:28.032+00:00"
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                      description: >-
+                        Публичный идентификатор контрагента
+                    АссоциированныйЧленСКПК:
+                      type: boolean
+                      description: Булево значение, указывающее, является ли контрагент ассоциированным членом СКПК
+                      example: true
+                    ВидПайщикаСКПК:
+                      $ref: '#/components/schemas/ВидПайщикаСКПК'
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+              required:
+                - Идентификатор
+                - Реквизиты
+                  - Дата
+                  - Организация
+                  - Контрагент
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ИсключениеПайщика:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+
+
+
+
+
+
+
   '/pledge_contract_create/v1.0/{node}':
     post:
       tags:
@@ -3279,62 +3736,68 @@ paths:
                     Уникальный идентификатор объекта, если не указан, то
                     идентификатор будет сгенерирован автоматическина на основе
                     ссылки созданной в БД  (GUID)
-                Организация:
-                  $ref: '#/components/schemas/Организация' 
-                ПодразделениеОрганизации:
-                  $ref: '#/components/schemas/ПодразделениеОрганизации' 
-                Контрагент:
-                  $ref: '#/components/schemas/Контрагент' 
-                  description: >-
-                   Публичный идентификатор контрагента, являющегося
-                    залогодателем
-                Заемщик:
-                  type: string
-                  maxLength: 100
-                  example: 14438b29-8562-4027-9138-5238da9b86b9Тест3
-                  description: Публичный идентификатор Контрагента заемщика                                   
-                Займ:
-                  type: string
-                  maxLength: 100
-                  example: c42171d3-fd2f-436d-854e-6a9c9ce7c7ad
-                  description: >-
-                    Публичный идентификатор займа
-                Дата:
-                  example: '2022-05-05T09:15:28.032+00:00'
-                  type: string
-                  format: data-time
-                  description: Дата окончания залога                    
-                ДатаНачала:
-                  example: '2022-05-06T00:00:00'
-                  type: string
-                  format: data-time
-                  description: Дата начала залога                  
-                ДатаОкончания:
-                  example: '2022-06-06T00:00:00'
-                  type: string
-                  format: data-time
-                  description: Дата окончания залога  
-                ДатаДоговора:
-                  example: '2022-05-05T00:00:00'
-                  type: string
-                  format: data-time
-                  description: >-
-                    Дата подписания договора займа клиентом (не обязательно
-                    совпадает с фактической датой выдачи займа)
-                НомерДоговора:
-                  type: string
-                  maxLength: 50
-                  example: 2022-ГЛ001  
-                Комментарий:
-                  $ref: '#/components/schemas/Комментарий' 
-                ТипОбеспечения:
-                  type: string
-                  example: ПрочийЗалог                  
-                  description: публичный идентификатор Справочник.АЭ_ТипыОбеспеченийЗаймов                
-                ДополнительноеСоглашение:                 
-                  description: Создавать дополнительное соглашение к займу или нет
-                  type: boolean
-                  example: true
+                Реквизиты:
+                  type: object
+                  required:
+                    - Организация
+                    - Дата
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                      description: >-
+                        Публичный идентификатор контрагента, являющегося
+                        залогодателем
+                    Заемщик:
+                      type: string
+                      maxLength: 100
+                      example: 14438b29-8562-4027-9138-5238da9b86b9Тест3
+                      description: Публичный идентификатор Контрагента заемщика                                   
+                    Займ:
+                      type: string
+                      maxLength: 100
+                      example: c42171d3-fd2f-436d-854e-6a9c9ce7c7ad
+                      description: >-
+                        Публичный идентификатор займа
+                    Дата:
+                      example: '2022-05-05T09:15:28.032+00:00'
+                      type: string
+                      format: data-time
+                      description: Дата окончания залога                    
+                    ДатаНачала:
+                      example: '2022-05-06T00:00:00'
+                      type: string
+                      format: data-time
+                      description: Дата начала залога                  
+                    ДатаОкончания:
+                      example: '2022-06-06T00:00:00'
+                      type: string
+                      format: data-time
+                      description: Дата окончания залога  
+                    ДатаДоговора:
+                      example: '2022-05-05T00:00:00'
+                      type: string
+                      format: data-time
+                      description: >-
+                        Дата подписания договора займа клиентом (не обязательно
+                        совпадает с фактической датой выдачи займа)
+                    НомерДоговора:
+                      type: string
+                      maxLength: 50
+                      example: 2022-ГЛ001  
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                    ТипОбеспечения:
+                      type: string
+                      example: ПрочийЗалог                  
+                      description: публичный идентификатор Справочник.АЭ_ТипыОбеспеченийЗаймов                
+                    ДополнительноеСоглашение:                 
+                      description: Создавать дополнительное соглашение к займу или нет
+                      type: boolean
+                      example: true
                 ОбъектыЗалога:
                           type: array
                           items:
@@ -3362,8 +3825,8 @@ paths:
                                 maxLength: 100 
                                 example: 1000
               required:
-                - Организация
-                - Контрагент
+                - Реквизиты
+                - ОбъектыЗалога
       responses:
         '200':
           description: JSON формат
@@ -3389,6 +3852,12 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+
+
+
+
+
+
   '/object_of_pledge_request/v1.0/{node}':
     post:
       tags:
@@ -9516,7 +9985,63 @@ paths:
                       description: Значение процентной ставки, переопределяет значение из займа
                     ПроцентнаяСтавкаПериодичность:
                       $ref: '#/components/schemas/ПроцентнаяСтавкаПериодичность'
-                      
+                    ПрофильРаспределенияОплат:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор  - справочник АЭ_ПрофилиРаспределенияПлатежей
+                    ПредоставитьЛьготныйПериодРеструктуризация:
+                      type: boolean
+                      description: >-
+                             булево - если выключен все последующие реквизиты игнорируются
+                      example: false
+                    РежимЛьготногоПериода:
+                        type: string
+                        description:  определяет вид ДС (вход в ЛП, изменения/пролонгация ЛП, выход из ЛП)
+                        enum:
+                          - Начало
+                          - Изменение
+                          - Окончание
+                        example: Начало 
+                    ТипЛьготногоПериода: 
+                        type: string
+                        description:  перечисление АЭ_ТипыЛьготногоПериодаРеструктуризация
+                        $ref: '#/components/schemas/ТипЛьготногоПериода'
+                    ПричинаЛьготногоПериодаРеструктуризация:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор  - справочник АЭ_ПричиныЛьготногоПериодаРеструктуризация
+                    ВариантРеструктуризации: 
+                        $ref: '#/components/schemas/ВариантРеструктуризации'
+ 
+                    ДатаНачалаЛьготногоПериода:
+                      example: '2020-03-02T00:00:00'
+                      type: string
+                      format: data-time
+                      description: >-
+                         Дата начала ЛП
+                    ДатаОкончанияЛьготногоПериода:
+                      example: '2020-03-02T00:00:00'
+                      type: string
+                      format: data-time
+                      description: >-
+                         Дата окончания ЛП 
+                    ДатаОкончанияОсновныхНачислений:
+                      example: '2020-03-02T00:00:00'
+                      type: string
+                      format: data-time
+                      description: >-
+                         Дата окончания основных начислений, необязательная, (служебный реквизит для расчёта графиков, не рекомендуется заполнять вручную)
+                    ЛьготныйПериодСНеопределеннымСроком:
+                      type: boolean
+                      description: >-
+                             флаг Льготный период с неопределенным сроком
+                      example: false - булево 
+                    
+                    ДатаПлатежаРеструктуризированнойЗадолженности:
+                      example: '2020-03-02T00:00:00'
+                      type: string
+                      format: data-time
+                      description: >-
+                         Дата платежа - дата, необязательня, используется при значениях варианта реструктуризации НаПроизвольнуюДату
+                   
                     ПортфельРезерваПодОбесценение:
                       type: string
                       description: Публичный идентификатор портфеля РО (Справочник.АЭ_ПортфелиРезервовПодОбесценение)
@@ -9638,6 +10163,8 @@ paths:
                   description: >-
                     Публичный идентификатор вида дополнительного соглашения.
                     Предварительно настраивается в 1С вручную.
+                ИнтервалыПроцентнойСтавки:
+                  $ref: '#/components/schemas/ИнтервалыПроцентнойСтавки'
                 ДатаДопСоглашения:
                   example: '2019-11-14T00:00:00'
                   type: string
@@ -20704,6 +21231,21 @@ components:
         - ПроцентыНачисленныеДоЛьготногоПериода
         - ОтложенныеПроцентыПослеЛьготногоПериода
       example: НачислениеПроцентовНаПросроченнуюЗадолженность
+
+    ВидПайщикаСКПК: # $ref: '#/components/schemas/ВидПайщикаСКПК'
+      type: string
+      description: Идентификатор перечисления "АЭ_ВидыПайщиковСКПК"
+      example: "ГражданеЗанимающихсяСадоводствомОгородничествомИлиЖивотноводством"
+      enum:
+        - ГражданеЗанимающихсяСадоводствомОгородничествомИлиЖивотноводством
+        - ГражданеВедущиеЛичноеПодсобноеХозяйство
+        - ЧленыИРаботникиСХОрганизацийКрестьянскихФермерскихХозяйств
+        - РаботникиУчрежденийСоцОбслуживанияНаселенияСельскихПоселений
+        - ГражданеОказывающиеУслугиПотребительскимКооперативамИлиСХТоваропроизводителям
+        - ЮрЛицаЯвляющиесяСХТоваропроизводителями
+        - ЮрЛицаОказывающиеУслугиПотребительскимКооперативамИлиСХТоваропроизводителям
+        - Прочие
+
     ВидПроверки: # $ref: '#/components/schemas/ВидПроверки'
       type: string
       description: все неинтерактивные проверки перечисление АЭ_ВидыПроверокКонтрагентов. 
@@ -20779,6 +21321,36 @@ components:
         - ГодПоМесяцам
         - ПоГрафикуПлатежей  
       description: Перечисление АЭ_ПериодичностьПроцентнойСтавки
+    
+    
+    ВариантРеструктуризации: # $ref: '#/components/schemas/ВариантРеструктуризации' 
+      type: string                      
+      example: НеПереноситьЗадолженность
+
+      description:  перечисление АЭ_ВариантыРеструктуризацииЗадолженностиПоЗаймам
+      enum:
+        - НеПереноситьЗадолженность  
+        - ПереноситьЗадолженностьНаДатуОкончанияДоговораСПогашениемВКонцеСрока
+        - ПереноситьВсюЗадолженностьНаДатуОкончанияДоговораСПогашениемВКонцеСрока
+        - ПереноситьЗадолженностьНаДатуОкончанияДоговора
+        - ПереноситьВсюЗадолженностьНаДатуОкончанияДоговора
+        - ПереноситьЗадолженностьНаПроизвольнуюДату
+        - ПереноситьВсюЗадолженностьНаПроизвольнуюДату
+        - ПереноситьЗадолженностьОсновнойДолгНаДатыПоГрафикуПлатежей
+        - ПереноситьВсюЗадолженностьНаБлижайшуюДатуПоГрафикуПлатежей
+
+
+
+
+    ТипЛьготногоПериода: # $ref: '#/components/schemas/ТипЛьготногоПериода' 
+      type: string                      
+      example: ПолноеПрекращениеПлатежейВТечениеПериода
+      enum:
+        - ПолноеПрекращениеПлатежейВТечениеПериода  
+        - УменьшениеРазмераПлатежейВТечениеПериода  
+
+      description: Перечисление АЭ_ВариантыРеструктуризацииЗадолженностиПоЗаймам
+      
     ОрганРегистрацииДляАдресаПрописки: # $ref: '#/components/schemas/ОрганРегистрацииДляАдресаПрописки' 
       type: string                      
       example: "123-456"
@@ -21397,7 +21969,23 @@ components:
           КемВыдан:
             example: ОТДЕЛЕНИЕМ ОФМС РОССИИ ПО РЕСП. АЛТАЙ В КОШ-АГАЧСКОМ РАЙОНЕ
             type: string
-            maxLength: 200
+            maxLength: 200 
+          ФамилияЛатиницей:
+            example: Иванов
+            type: string
+            maxLength: 50
+          ИмяЛатиницей:
+            example: Иван
+            type: string
+            maxLength: 50
+          
+          СрокДействия:
+            example: '1965-01-01T00:00:00'
+            type: string
+            format: date-time
+          
+          СтранаВыдачи:
+            $ref: '#/components/schemas/СтраныМира'
           КодПодразделения:
             example: 12-87
             type: string
@@ -23814,6 +24402,12 @@ components:
                   СписанияСРасчетногоСчета:
                     $ref: "#/components/schemas/body_resp"
                   ПлатежныеПоручения:
+                    $ref: "#/components/schemas/body_resp"
+                  ВступлениеПайщика:
+                    $ref: "#/components/schemas/body_resp"
+                  ИсключениеПайщика:
+                    $ref: "#/components/schemas/body_resp"
+                  ЗаявкаНаИсключениеПайщика:
                     $ref: "#/components/schemas/body_resp"
 
 
