@@ -3152,6 +3152,8 @@ paths:
                 - Реквизиты
 
               properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
                   type: string
                   maxLength: 100
@@ -3275,6 +3277,8 @@ paths:
             schema:
               type: object
               properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
                   $ref: '#/components/schemas/Идентификатор'
                 Реквизиты:
@@ -3357,6 +3361,8 @@ paths:
             schema:
               type: object
               properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
                   $ref: '#/components/schemas/Идентификатор'
                 Реквизиты:
@@ -3461,6 +3467,8 @@ paths:
             schema:
               type: object
               properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
                   $ref: '#/components/schemas/Идентификатор'
                 Реквизиты:
@@ -3548,6 +3556,8 @@ paths:
             schema:
               type: object
               properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
                   $ref: '#/components/schemas/Идентификатор'
                 Реквизиты:
@@ -3646,6 +3656,8 @@ paths:
             schema:
               type: object
               properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
                   $ref: '#/components/schemas/Идентификатор'
                 Реквизиты:
@@ -3706,10 +3718,474 @@ paths:
 
 
 
+  '/contribution_accruals_create/v1.0/{node}':
+    post:
+      tags:
+      - КПК
+      summary: Создать начисление взносов
+      description: Метод создания начисления взносов 
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - Идентификатор
+                - Реквизиты
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  required:
+                    - Дата
+                    - Организация
+                  properties:
+                    Дата:
+                      type: string
+                      format: date-time
+                      description: Дата документа
+                      example: "2021-08-07T09:15:28.032+00:00" 
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    ВидЦелевыхСредств:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Идентификатор вида целевых средств
+                      example: "4f40abc5-795b-11e8-a671-408d5c8f4986"
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                Взносы:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                        description: >-
+                          Публичный идентификатор контрагента
+                      Сумма:
+                        type: number
+                        format: float
+                        description: Сумма взноса
+                        example: 10000
+                      ВидЦелевыхСредств:
+                        $ref: '#/components/schemas/Идентификатор'
+                        
+                        description: Идентификатор вида целевых средств
+                        example: "4f40abc5-795b-11e8-a671-408d5c8f4986"
+                      ДатаПлатежа:
+                        type: string
+                        format: date-time
+                        description: Дата платежа (не обязательный параметр)
+                        example: "2021-08-06T09:15:28.032+00:00"
+
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  НачислениеВзносов:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
 
 
 
 
+
+
+  '/contribution_paid_create/v1.0/{node}':
+    post:
+      tags:
+      - КПК
+      summary: Создать поступление взносов
+      description: Метод создания поступления взносов 
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - Идентификатор
+                - Реквизиты
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  required:
+                    - Дата
+                    - Организация
+                  properties:
+                    Дата:
+                      type: string
+                      format: date-time
+                      description: Дата документа
+                      example: "2021-08-08T09:15:28.032+00:00"
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    ВидОперации:
+                      type: string
+                      description: Вид операции поступления взносов
+                      enum:
+                        - ПоступлениеВзносов
+                        - ПоступлениеВзносовСНачислением
+                      default: ПоступлениеВзносов
+                      example: "ПоступлениеВзносов"
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                      description: >-
+                        Публичный идентификатор контрагента
+                    ПроводитьФормируемыеДокументы:
+                      type: boolean
+                      description: Булево значение, по умолчанию Ложь
+                      default: false
+                    ОтражатьОплатуТекущимДокументом:
+                      type: boolean
+                      description: Булево значение, по умолчанию Истина
+                      default: true
+                    ДокументОснование:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Идентификатор документа основания
+                      example: "b1002393-fa88-11eb-8538-50e549b16bНВ"
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                Взносы:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Контрагент:
+                        type: string
+                        description: Идентификатор контрагента
+                        example: "004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ"
+                        $ref: '#/components/schemas/Контрагент' 
+                      Сумма:
+                        type: number
+                        format: float
+                        description: Сумма взноса
+                        example: 10000
+                      ВидЦелевыхСредств:
+                        type: string
+                        description: Идентификатор вида целевых средств
+                        example: "4f40abc5-795b-11e8-a671-408d5c8f4986"
+                      ФормаОплаты:
+                        $ref: '#/components/schemas/ФормаОплаты'
+                      Подразделение:
+                        type: string
+                        description: Идентификатор подразделения (не обязательный)
+                        example: "8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd"
+                        $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                      СтатьяДвиженияДенежныхСредств:
+                        type: string
+                        description: Идентификатор статьи движения денежных средств
+                        example: "fcd28ffd-0cc3-11e8-a65d-408d5c8f4986"
+                      СодержаниеВходящегоДокументаОплаты:
+                        type: string
+                        description: Содержание входящего документа оплаты
+                        example: "тест API"
+                      НомерВходящегоДокументаОплаты:
+                        type: string
+                        description: Номер входящего документа оплаты
+                        example: "5523"
+                      ДатаВходящегоДокументаОплаты:
+                        type: string
+                        format: date-time
+                        description: Дата входящего документа оплаты
+                        example: "2021-08-09T09:15:28.032+00:00"
+ 
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПоступлениеВзносов:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+  '/contribution_return_create/v1.0/{node}':
+    post:
+      tags:
+      - КПК
+      summary: Создать поступление взносов
+      description: Метод создания поступления взносов 
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - Идентификатор
+                - Реквизиты
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  properties:
+                    Дата:
+                      type: string
+                      format: date-time
+                      description: Дата документа
+                      example: "2021-09-10T09:15:28.032+00:00"
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    ВидОперации:
+                      type: string
+                      description: Вид операции возврата взносов
+                      enum:
+                        - НачислениеОплатаВозврата
+                        - ОплатаВозврата
+                        - НачислениеВозврата
+                      default: ОплатаВозврата
+                      example: "ОплатаВозврата"
+                    Контрагент:
+                      type: string
+                      description: Идентификатор контрагента (не обязательный)
+                      example: "004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ"
+                      $ref: '#/components/schemas/Контрагент' 
+                    ПроводитьФормируемыеДокументы:
+                      type: boolean
+                      description: Булевое значение, по умолчанию Ложь
+                      default: false
+                    ДокументОснование:
+                      type: string
+                      description: Идентификатор документа основания
+                      example: "b1002393-fa88-11eb-8538-50e549b16bИП"
+                    ОтражатьОплатуТекущимДокументом:
+                      type: boolean
+                      description: Булевое значение, по умолчанию Истина
+                      default: true
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                Взносы:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Контрагент:
+                        type: string
+                        description: Идентификатор контрагента
+                        example: "004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ"
+                        $ref: '#/components/schemas/Контрагент' 
+                      Сумма:
+                        type: number
+                        format: float
+                        description: Сумма возврата взноса
+                        example: 10000
+                      ВидЦелевыхСредств:
+                        type: string
+                        description: Идентификатор вида целевых средств
+                        example: "4f40abc5-795b-11e8-a671-408d5c8f4986"
+                      ФормаОплаты:
+                        $ref: '#/components/schemas/ФормаОплаты'
+                      Подразделение:
+                        type: string
+                        description: Идентификатор подразделения (не обязательный)
+                        $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                        example: "8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd"
+                      СтатьяДвиженияДенежныхСредств:
+                        type: string
+                        description: Идентификатор статьи движения денежных средств
+                        example: "fcd28ffd-0cc3-11e8-a65d-408d5c8f4986"
+                      СодержаниеВходящегоДокументаОплаты:
+                        type: string
+                        description: Содержание входящего документа оплаты
+                        example: "тест API"
+                      НомерВходящегоДокументаОплаты:
+                        type: string
+                        description: Номер входящего документа оплаты
+                        example: "5523"
+                      ДатаВходящегоДокументаОплаты:
+                        type: string
+                        format: date-time
+                        description: Дата входящего документа оплаты
+                        example: "2021-08-09T09:15:28.032+00:00"
+  
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ВозвратВзносов:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+
+
+  '/loan_reference_create/v1.0/{node}':
+    post:
+      tags:
+        - Заявки, Займы предоставленные, Графики, Дополнительные соглашения
+      summary: Создать справка по займу предоставленному
+      description: >-
+        В 1С создаются объект справка по займу предоставленному
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  required:
+                    - Организация
+                    - Контрагент
+                    - Дата
+                    - ВидСправки
+                    - Займ
+                  properties:
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2021-08-07T09:15:28.032+00:00" 
+                      description: Дата документа
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации' 
+                    ВидСправки:
+                      $ref: '#/components/schemas/ВидСправки' 
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                    Займ:
+                      type: string
+                      $ref: '#/components/schemas/Займ' 
+                      description: Идентификатор Займа
+                    ДатаНачала:
+                      type: string
+                      format: date-time
+                      example: "2021-08-07T09:15:28.032+00:00" 
+                      description: Дата начала (только для определённых видов справок)
+                    ДатаОкончания:
+                      type: string
+                      format: date-time
+                      example: "2021-08-07T09:15:28.032+00:00" 
+                      description: Дата окончания (только для определённых видов справок)
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                Займы:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Дата:
+                        type: string
+                        format: date-time
+                        description: Дата выплаты
+                        example: "2021-08-07T09:15:28.032+00:00" 
+                      Сумма:
+                        type: number
+                        format: float
+                        description: Сумма для строки
+                  description: Табличная часть Займы применяется только для ВидСправки СуммаВыплаченныхПроцентов, СуммаВыплатПоПогашениюОсновногоДолга
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  СправкаПоЗаймуПредоставленному:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
 
 
 
@@ -3728,6 +4204,8 @@ paths:
             schema:
               type: object
               properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
                 Идентификатор:
                   type: string
                   maxLength: 100
@@ -18746,7 +19224,34 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              type: object              
+              properties:
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  required:
+                    - Дата
+                    - Организация
+                    - Контрагент
+                  properties:
+                    Дата:
+                      example: '2020-01-01T00:00:00'
+                      type: string
+                      format: data-time
+                      description: Дата документа (обязательное поле)
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    ПоступлениеНаСчетТекущихРасчетов:
+                      type: boolean
+                      description: Булево значение, указывающее, является ли ПоступлениеНаСчетТекущихРасчетов
+                      example: false
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                КорректировкиДолга:
+                 type: array
               example:
                 Идентификатор: 7cab235b-d936-11ed-aa31-00090ffe0001
                 Реквизиты:
@@ -19350,6 +19855,228 @@ paths:
  
 
 
+  '/bki_additional_event_structure_request/v1.0/{node}':
+    post:
+      tags:
+        - БКИ
+      summary: Запрос структуры дополнительных событий для выгрузки в БКИ
+      description: >-
+        Запрос структуры дополнительных событий для выгрузки в БКИ
+        состав данных иногда изменяется при изменении версии БКИ 
+        Метод для работы требуют расширения БКИ версии не ниже 3.0.167.32/1.5.7.1
+        и активного сервиса Помощник обмена с БКИ
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ВидСобытия
+              properties:
+                ВидСобытия:
+                  type: string
+                  description: Вид события для выгрузки в БКИ. перечисление АЭ_ВидыСобытийДляВыгрузкиВБКИ
+                  enum:
+                    - СведенияОСудебномСпоре
+                    - СведенияОСудебномСпореПоручительство
+                    - СведенияОВнесудебномБанкротствеФизическогоЛица
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  СудебныйАкт:
+                    - Контрагент: 00325e92-51c4-4da9-9d80-d36ce6c8e4a0
+                      Займ: bca64ac5-e5b4-4fa4-bea2-ef061fb9447d
+                      ДатаСобытия: '2000-01-01'
+                      ПризнакСудебногоСпораИлиТребования: false
+                      ПризнакНаличияСудебногоАкта: false
+                      ДатаПринятияСудебногоАкта: '2000-01-01'
+                      НомерСудебногоАкта: string
+                      ПризнакВступленияАктаВЗаконнуюСилу: false
+                      РезолютивнаяЧастьСудебногоАкта6551: 1
+                      КодИскаИлиТребования: 1
+                      СуммаТребованийПодлежащихУдовлетворению: 1
+                      ДополнительныеСведенияПоСудебномуАкту: string
+                      РезолютивнаяЧастьСудебногоАкта: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+ 
+
+
+  '/bki_additional_event_create/v1.0/{node}':
+    post:
+      tags:
+        - БКИ
+      summary: Создать документ Регистрация доп событий в БКИ 
+      description: >-
+        Создать документ Регистрация доп событий в БКИ (АЭ_РегистрацияДополнительныхСобытийДляПередачиВБКИ) 
+        данные в нём хранятся в произвольной форме, состав данных иногда изменяется при изменении версии БКИ 
+        Метод для работы требуют расширения БКИ версии не ниже 3.0.167.32/1.5.7.1
+        и активного сервиса Помощник обмена с БКИ
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ДанныеСобытий
+              properties:
+                Идентификатор:
+                  type: string
+                  description: Уникальный идентификатор события
+                Реквизиты:
+                  type: object
+                  required:
+                    - Организация
+                    - Дата
+                    - ВидСобытия
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2021-08-07T09:15:28.032+00:00" 
+                      description: Дата события
+                    ВидСобытия:
+                      description: Вид события для выгрузки в БКИ. перечисление АЭ_ВидыСобытийДляВыгрузкиВБКИ
+                      enum:
+                        - СведенияОСудебномСпоре
+                        - СведенияОСудебномСпореПоручительство
+                        - СведенияОВнесудебномБанкротствеФизическогоЛица
+                      example: СведенияОСудебномСпоре
+
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+                      
+                ДанныеСобытий:
+                  type: object
+                  properties:
+                    СудебныйАкт:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          Контрагент:
+                            type: string
+                            description: Идентификатор контрагента
+                          Займ:
+                            type: string
+                            description: Идентификатор займа
+                          ДатаСобытия:
+                            type: string
+                            format: date
+                            description: Дата события
+                          ПризнакСудебногоСпораИлиТребования:
+                            type: boolean
+                            description: Признак судебного спора или требования
+                          ПризнакНаличияСудебногоАкта:
+                            type: boolean
+                            description: Признак наличия судебного акта
+                          ДатаПринятияСудебногоАкта:
+                            type: string
+                            format: date
+                            description: Дата принятия судебного акта
+                          НомерСудебногоАкта:
+                            type: string
+                            description: Номер судебного акта
+                          ПризнакВступленияАктаВЗаконнуюСилу:
+                            type: boolean
+                            description: Признак вступления акта в законную силу
+                          РезолютивнаяЧастьСудебногоАкта6551:
+                            type: integer
+                            description: Числовое значение резолютивной части судебного акта
+                          КодИскаИлиТребования:
+                            type: integer
+                            description: Код иска или требования
+                          СуммаТребованийПодлежащихУдовлетворению:
+                            type: number
+                            format: float
+                            description: Сумма требований, подлежащих удовлетворению
+                          ДополнительныеСведенияПоСудебномуАкту:
+                            type: string
+                            description: Дополнительные сведения по судебному акту
+                          РезолютивнаяЧастьСудебногоАкта:
+                            type: string
+                            description: Текст резолютивной части судебного акта
+                        example:
+                          Контрагент: 00325e92-51c4-4da9-9d80-d36ce6c8e4a0
+                          Займ: bca64ac5-e5b4-4fa4-bea2-ef061fb9447d
+                          ДатаСобытия: '2000-01-01'
+                          ПризнакСудебногоСпораИлиТребования: false
+                          ПризнакНаличияСудебногоАкта: false
+                          ДатаПринятияСудебногоАкта: '2000-01-01'
+                          НомерСудебногоАкта: string
+                          ПризнакВступленияАктаВЗаконнуюСилу: false
+                          РезолютивнаяЧастьСудебногоАкта6551: 1
+                          КодИскаИлиТребования: 1
+                          СуммаТребованийПодлежащихУдовлетворению: 1
+                          ДополнительныеСведенияПоСудебномуАкту: string
+                          РезолютивнаяЧастьСудебногоАкта: string
+
+
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  СудебныйАкт:
+                    - Контрагент: 00325e92-51c4-4da9-9d80-d36ce6c8e4a0
+                      Займ: bca64ac5-e5b4-4fa4-bea2-ef061fb9447d
+                      ДатаСобытия: '2000-01-01'
+                      ПризнакСудебногоСпораИлиТребования: false
+                      ПризнакНаличияСудебногоАкта: false
+                      ДатаПринятияСудебногоАкта: '2000-01-01'
+                      НомерСудебногоАкта: string
+                      ПризнакВступленияАктаВЗаконнуюСилу: false
+                      РезолютивнаяЧастьСудебногоАкта6551: 1
+                      КодИскаИлиТребования: 1
+                      СуммаТребованийПодлежащихУдовлетворению: 1
+                      ДополнительныеСведенияПоСудебномуАкту: string
+                      РезолютивнаяЧастьСудебногоАкта: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+ 
+
+
+
+
 
 
   '/loan_statistics_create/v1.0/{node}':
@@ -19676,7 +20403,54 @@ paths:
                   items:
                     type: object
                   
-                
+                РасходныеКассовыеОрдераПоЗаймам: 
+                  type: array
+                  description: >-
+                    Аналогично методу  аналогично сообщениею метода (loan_cash_issue_create)
+                  items:
+                    type: object
+                РасходныеКассовыеОрдера: 
+                  type: array
+                  description: >-
+                    Аналогично методу  аналогично сообщениею метода (cash_issue_create)
+                  items:
+                    type: object 
+                СписанияСРасчетногоСчета: 
+                  type: array
+                  description: >-
+                    Аналогично методу  аналогично сообщениею метода (bank_issue_create)
+                  items:
+                    type: object  
+                ПриходныеКассовыеОрдераПоЗаймам: 
+                  type: array
+                  description: >-
+                    Аналогично методу  аналогично сообщениею метода (loan_cash_repayment_create)
+                  items:
+                    type: object 
+                ПриходныеКассовыеОрдера: 
+                  type: array
+                  description: >-
+                    Аналогично методу  аналогично сообщениею метода (cash_payment_create)
+                  items:
+                    type: object
+                ПоступленияНаРасчетныйСчетПоЗаймам: 
+                  type: array
+                  description: >-
+                    Аналогично методу  аналогично сообщениею метода (loan_bank_repayment_assign)
+                  items:
+                    type: object
+                ПоступленияНаРасчетныйСчет: 
+                  type: array
+                  description: >-
+                    Аналогично методу  аналогично сообщениею метода (bank_payment_create)
+                  items:
+                    type: object
+                ПлатежныеПоручения: 
+                  type: array
+                  description: >-
+                    Аналогично методу  аналогично сообщениею метода (payment_order_create)
+                  items:
+                    type: object
                 ВыдачиЗаймов:
                   type: array
                   description: >-
@@ -21246,6 +22020,14 @@ components:
         - ЮрЛицаОказывающиеУслугиПотребительскимКооперативамИлиСХТоваропроизводителям
         - Прочие
 
+    ВидСправки: #$ref: '#/components/schemas/ВидСправки'  
+      type: string
+      enum:
+        - ПодтверждениеПолногоИсполненияДенежныхОбязательств
+        - ОстатокЗадолженности
+        - СуммаВыплаченныхПроцентов
+        - СуммаВыплатПоПогашениюОсновногоДолга
+      description: Вид справки
     ВидПроверки: # $ref: '#/components/schemas/ВидПроверки'
       type: string
       description: все неинтерактивные проверки перечисление АЭ_ВидыПроверокКонтрагентов. 
@@ -21834,7 +22616,6 @@ components:
       example: ПрочиеРасчетыСКонтрагентами  
       enum:
         - ПрочееСписание
-        - ПрочиеРасчетыСКонтрагентами
         - КомиссияБанка
         - ВозвратЗаймаКонтрагенту
         - ВыдачаЗаймаКонтрагенту
@@ -24408,6 +25189,14 @@ components:
                   ИсключениеПайщика:
                     $ref: "#/components/schemas/body_resp"
                   ЗаявкаНаИсключениеПайщика:
+                    $ref: "#/components/schemas/body_resp"
+                  НачислениеВзносов:
+                    $ref: "#/components/schemas/body_resp"
+                  ПоступлениеВзносов:
+                    $ref: "#/components/schemas/body_resp"
+                  ВозвратВзносов:
+                    $ref: "#/components/schemas/body_resp"
+                  СправкаПоЗаймуПредоставленному:
                     $ref: "#/components/schemas/body_resp"
 
 
