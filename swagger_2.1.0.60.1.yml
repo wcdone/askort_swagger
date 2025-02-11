@@ -2050,6 +2050,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: d21eb667-3b7f-4530-a373-0b6bf7a4a8d4
                 КодРезультата: 2
@@ -4385,13 +4398,66 @@ paths:
                 
       responses:
         '200':
-          $ref: '#/components/responses/200'
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
+              example:
+              
+                ИдентификаторЗапроса: a9ffbb7c-d9d7-4813-9f06-146caba22a5b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: 
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                - Статус: 4
+                  Идентификатор: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                  Реквизиты:
+                    Наименование: ДомТест
+                    НаименованиеПолное: Тестовая недвижимость
+                    ВидИмущества:
+                      Идентификатор: Недвижимость (жилая)
+                      ИдентификаторСсылки: 
+                      Представление: Недвижимость (жилая)
+                - Статус: 4
+                  Идентификатор: 047dd205-c04f-4ac8-8b03-60e1456e5d27ТС
+                  Реквизиты:
+                    Наименование: Hyundai Solaris
+                    НаименованиеПолное: Hyundai Solaris полное наименование
+                    ВидИмущества:
+                      Идентификатор: Автотранспорт
+                      ИдентификаторСсылки: 
+                      Представление: Автотранспорт
+                - Статус: 4
+                  Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                  Реквизиты:
+                    Наименование: Прочее имущество
+                    НаименованиеПолное: Прочее имущество залог
+                    ВидИмущества:
+                      Идентификатор: Прочее
+                      ИдентификаторСсылки: 
+                      Представление: Прочее
+
         '400':
-          $ref: '#/components/responses/400'
+          description: Синтаксическая ошибка (запрос не валиден)
         '401':
-          $ref: '#/components/responses/401'
+          description: Запрос требует аутентификации
         '404':
-          $ref: '#/components/responses/404'
+          description: URL не найден
 
 
   '/loan_deposit_request/v1.0/{node}':
@@ -4430,6 +4496,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: 084375f4-6ef3-40bf-a820-77e430d5640c
                 КодРезультата: 1
@@ -6097,6 +6176,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: a334feee-9afc-4c6d-a38c-5a7568b54ef2
                 КодРезультата: 1
@@ -6189,6 +6281,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -6353,6 +6458,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: Получить Платежи (loan_deposit_payments_request)
@@ -6453,6 +6571,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: 228fce84-4497-490c-b3db-439d04c5717b
                 КодРезультата: 1
@@ -6567,6 +6698,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: c5dac449-4441-4af3-9caf-6a9fac37c4b7
                 КодРезультата: 1
@@ -7337,6 +7481,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: ce224b6c-30c5-422d-af6c-2c5acc8f55ad
                 КодРезультата: 2
@@ -8470,6 +8627,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: f0343654-bb7c-4bb3-a56c-0983abf23a4a
                 КодРезультата: 2
@@ -9258,6 +9428,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: 74310884-2c50-4c7e-bbf1-ea2485fa1fbb
                 КодРезультата: 2
@@ -10663,6 +10846,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: 86279687-709c-47dd-a21a-aeacaa71f80f
                 КодРезультата: 2
@@ -16008,6 +16204,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: 928d44a8-1914-4ddf-9180-f9630bd834d9
                 КодРезультата: 2
@@ -17274,6 +17483,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: 82bb8890-362f-4232-a4e2-2fccc14f78de
                 КодРезультата: 2
@@ -17736,6 +17958,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
                 example:
                   ИдентификаторЗапроса: c93ed718-190a-4989-a7d1-80c883af513d
                   КодРезультата: 2
@@ -17838,22 +18073,7 @@ paths:
                     АктуальныйЗаймКоличествоПролонгаций: 1
                     АктуальныйЗаймСрокЗайма: 261
 
-                properties:
-                  ИдентификаторЗапроса:
-                    type: string
-                    example: 852a0ca1-103e-42db-bd8b-90f5d8c50cfa
-                  
-                  КодРезультата:
-                    $ref: '#/components/schemas/КодРезультата'
-                  ОписаниеРезультата:
-                    $ref: '#/components/schemas/ОписаниеРезультата'
-                  КоличествоОбработанныхОбъектов:
-                    type: integer
-                    example: 2
-                  Данные:
-                    type: array
-                    items:
-                      type: object
+               
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -18290,6 +18510,40 @@ paths:
                     type: array
                     items:
                       type: object
+              example:
+                ИдентификаторЗапроса: 6d265633-49ed-42a5-9af1-b9c5aadd5e65
+                КодРезультата: 2
+                ОписаниеРезультата: Запрос выполнен частично, есть отмененные транзакции
+                ВнешниеДанные: 
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                - Статус: 6
+                  Идентификатор: ''
+                  ОшибкиВРамкахТранзакции: данных по идентификатору не найдено
+                - Статус: 4
+                  Идентификатор: 19ba-11ed-bd75-0242ac120002ЗЗайм
+                  ИдентификаторСсылки: b4ec745f-2cfe-11ee-b1cd-001e6797da0c
+                  Организация:
+                    Идентификатор: '7714103163'
+                    ИдентификаторСсылки: 
+                    Представление: Организация МКК и КПК
+                  Контрагент:
+                    Идентификатор: 004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ
+                    ИдентификаторСсылки: 
+                    Представление: Тестова Тест Тестовна
+                  Начисления:
+                  - Регистратор:
+                      Идентификатор: 
+                      ИдентификаторСсылки: ''
+                      Представление: 
+                    Период: '2022-12-19T10:40:28'
+                    ДатаПлатежа: '2022-12-19T00:00:00'
+                    ВидНачисления:
+                      Идентификатор: ОсновнойДолг
+                      ИдентификаторСсылки: 
+                      Представление: Основной долг
+                    Сумма: 9000
+
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -18312,7 +18566,85 @@ paths:
               $ref: '#/components/schemas/request_by_id'
       responses:
         '200':
-          $ref: '#/components/responses/200'
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
+              example:
+                ИдентификаторЗапроса: c8439816-8b6b-42f9-9ce7-be6385afc629
+                КодРезультата: 2
+                ОписаниеРезультата: Запрос выполнен частично, есть отмененные транзакции
+                ВнешниеДанные: 
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                - Статус: 6
+                  Идентификатор: ''
+                  ОшибкиВРамкахТранзакции: данных по идентификатору не найдено
+                - Статус: 4
+                  Идентификатор: pdl
+                  ИдентификаторСсылки: 5eb7e758-9c8e-11ed-8e45-b42e991713ac
+                  Реквизиты:
+                    Наименование: pdl
+                    Действует: true
+                    СрокЗайма: 30
+                    СуммаЗайма: 10000
+                    ИспользоватьКомиссии: false
+                    ИспользоватьЧленскиеВзносы: false
+                    ИспользоватьРасходныеКомиссии: false
+                    ИспользоватьШтрафы: false
+                    ПроцентнаяСтавка: 1
+                    ПроцентнаяСтавкаВидПредставление: Фиксированная процентная ставка
+                    ПроцентнаяСтавкаПериодичность:
+                      Идентификатор: День
+                      Представление: "% в день"
+                    ПроцентнаяСтавкаПериодичностьИнтервалов:
+                      Идентификатор: Месяц
+                      Представление: Месяц
+                    ПереноситьДатуПлатежаНаРабочийДень: false
+                    ОбеспеченныйЗаймЗалоги: true
+                    ОбеспеченныйЗаймПоручительство: true
+                    ФормаОплаты:
+                      Идентификатор: 
+                      ИдентификаторСсылки: 
+                      Представление: 
+                    СуммаЗаймаОграничить: false
+                    СуммаЗаймаИнтервалОт: 0
+                    СуммаЗаймаИнтервалДо: 0
+                    СрокЗаймаОграничить: false
+                    СрокЗаймаИнтервалОт: 0
+                    СрокЗаймаИнтервалДо: 0
+                    ЗапретНаУвеличениеСуммыЗайма: false
+                    ЗапретНаУвеличениеСрокаЗайма: false
+                    ВключитьВРасчетПроцентовДеньВыдачи: false
+                    АвтоматическаяПролонгация: false
+                    СрокЗаймаЗапретитьИзменение: false
+                    РазрешенаПролонгация: true
+                    ПролонгироватьРазрешеноТолькоПриЗадолженностиПоОсновномуДолгу: false
+                    КоличествоДнейДоОкончанияДоговораДляПролонгации: 0
+                    ПролонгироватьТолькоНаПервоначальныйСрок: false
+                    СрокПролонгацииЗайма: 0
+                    СрокаЗаймаПериодичностьПролонгации:
+                      Идентификатор: День
+                      Представление: дн.
+                    ПроцентыДнейОтсрочкиНачисления: 0
+                  ИнтервалыПроцентнойСтавки: []
+                  ДополнительныеНачисления: []
+                  ШтрафныеСанкции: []
+
         '400':
           description: Синтаксическая ошибка (запрос не валиден)
         '401':
@@ -19857,7 +20189,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/200'
+                type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               example:
                 ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
                 КодРезультата: 1
@@ -20843,6 +21188,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -21106,6 +21464,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -21378,6 +21749,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -21669,6 +22053,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -21852,6 +22249,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -22121,6 +22531,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -22324,6 +22747,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -22539,6 +22975,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
               examples:
                 example-0:
                   summary: >-
@@ -23465,10 +23914,9 @@ paths:
                     type: integer
                     example: 1
                   Данные:
-                    type: object
-                    properties:
-                      РасчетЗначенийОбъемовЗаймовПоКатегорииМПЛ:
-                        type: object
+                    type: array
+                    items:
+                      type: object
                 example:
                   ИдентификаторЗапроса: 1ccd3280-a100-4914-a682-40f1379148b4
                   КодРезультата: 1
