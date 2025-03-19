@@ -12556,7 +12556,17 @@ paths:
         - Прочие операции по займам предоставленным
       summary: Создать мемордер по статистике
       description: >-
-        Метод позволяет ввести остатки исторических данных по займам предоставленным, необходимые для расчета РВПЗ и формирования отчетов
+        Метод позволяет ввести Мемориальные ордера статистик. 
+        Состав каждой структуры динамический, строится по составу регистра в конфигурации.
+        РасчетСтатистики - АЭ_РасчетСтатистикиЗаймовПредоставленных
+        РасчетБазовойСтатистики - АЭ_РасчетБазовойСтатистикиПоЗаймамПредоставленным
+        РасчетСтатистикиПСК - АЭ_РасчетСтатистикиПСК
+        РасчетСтатистикиБКИ - АЭ_РасчетСтатистикиПоЗаймамПредоставленнымДляПередачиВБКИ
+        РасчетСтатистикиСписанныхЗаймов - АЭ_РасчетСтатистикиСписанныхЗаймовПредоставленных
+        РасчетСтатистикиПоручительств - АЭ_РасчетСтатистикиПоручительствЗаймовПредоставленных
+        РасчетРасширеннойСтатистики - АЭ_РасчетРасширеннойСтатистикиЗаймовПредоставленных
+          Все ресурсы необязательные, обязательно только измерения (Контрагент-Займ / Контрагент-ДоговорПоручительства)
+
       requestBody:
         content:
           application/json:
@@ -12565,8 +12575,10 @@ paths:
               required:
                 - Идентификатор
                 - Реквизиты
-                - РасчетСтатистики
               properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+
                 Идентификатор:
                   $ref: '#/components/schemas/Идентификатор'
                   description: Уникальный идентификатор расчета статистики
@@ -12592,53 +12604,1282 @@ paths:
                     Комментарий:
                       $ref: '#/components/schemas/Комментарий'
                 РасчетСтатистики:
+
                   type: array
                   items:
                     type: object
+                    required:
+                        - Контрагент
+                        - Займ
                     properties:
+                      ДатаВозникновенияПросроченнойЗадолженностиДляРезервов: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДнейПросрочкиДляРезервов:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      СовокупнаяПродолжительностьПросрочкиДляРезервов:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      СовокупнаяПродолжительностьПросрочкиЗаГодДляРезервов:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ВыходилНаПросрочкуПослеРеструктуризацииРефинансирования:
+                        type: boolean
+                        example: false
+                      КоличествоДнейБезПросрочекПослеРеструктуризацииРефинансирования:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДатаРеструктуризации: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      КоличествоРеструктуризаций:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      КоличествоРефинансирований:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      КоличествоДнейПросрочкиНаМоментРеструктуризацииРефинансирования:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      МаксимальноеКоличествоДнейПросрочкиНаМоментРеструктуризацииРефинансирования:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      СуммарноеКоличествоДнейПросрочкиНаМоментРеструктуризацииРефинансирования:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ОшибкаВеденияУчета:
+                        type: boolean
+                        example: false
+                      ОшибкаВеденияУчетаПустаяДатаПлатежа:
+                        type: boolean
+                        example: false
+                      ОшибкаВеденияУчетаОтрицательнаяСуммаОстатка:
+                        type: boolean
+                        example: false
+                      ОшибкаВеденияУчетаОДОстатокМеньшеПросрочки:
+                        type: boolean
+                        example: false
+                      СуммаСреднемесячногоПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      КоличествоДнейПросрочкиНаНачалоДня:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ПродолжительностьПоследнейПогашеннойПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      СуммаЧастичноПереуступленнойЗадолженности:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженность:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженностьОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженностьПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПлатежа: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПлатежаОсновнойДолг: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПлатежаПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      СуммаПоследнегоПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоПлатежаОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоПлатежаПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежей:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежейОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежейПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженность:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьКомиссии:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьПени:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьШтрафы:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьПрочие:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьСудебныеПени:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьСудебныеШтрафы:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьСудебныеПрочие:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаВозникновенияПросроченнойЗадолженности: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиОсновнойДолг: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиКомиссии: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиПени: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиШтрафы: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиПрочие: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиСудебныеПени: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиСудебныеШтрафы: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиСудебныеПрочие: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДнейПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДнейПросрочкиОсновнойДолг:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДнейПросрочкиПроценты:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      СуммаПлатежейБезУчетаПросрочки:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПлатежейБезУчетаПросрочкиЗаТекущийМесяц:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПлатежейБезУчетаПросрочкиЗа24ПрошедшихМесяца:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ВыходилНаПросрочку:
+                        type: boolean
+                        example: false
+                      ЧислоПросрочек:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДатаНачалаПросрочки: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПропущенногоПлатежа: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДлительностьПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      МаксимальноеЧислоДнейПросрочкиЗаМесяц:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      МаксимальноеЧислоДнейПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      СовокупнаяПродолжительностьПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДатаПоследнегоПропущенногоПлатежаПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПлатежаВГрафике: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПропущенногоПлатежаОД: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
                       Контрагент:
                         $ref: '#/components/schemas/Контрагент' 
                       Займ:
-                         $ref: '#/components/schemas/Займ'
-                      ТекущаяЗадолженность:
+                        $ref: '#/components/schemas/Займ'
+
+                РасчетБазовойСтатистики:
+
+                  type: array
+                  items:
+                    type: object
+                    required:
+                        - Контрагент
+                        - Займ
+                    properties:
+                      ДнейПросрочки:
                         type: number
-                        format: float
-                        description: Текущая задолженность по займу
-                        example: 10000
-                      ТекущаяЗадолженностьОсновнойДолг:
-                        type: number
-                        format: float
-                        description: Основная сумма задолженности
-                        example: 5000
-                      ДатаПоследнегоПлатежа:
-                        type: string
-                        format: date
-                        description: Дата последнего платежа по займу
-                        example: '2022-12-10'
-                      ВыходилНаПросрочку:
-                        type: boolean
-                        description: Указание на просрочку по займу
-                        example: true
+                        format: integer
+                        maxLength: 6
+                        example: 123
                       СуммаСреднемесячногоПлатежа:
                         type: number
-                        format: float
-                        description: Средняя сумма ежемесячного платежа
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
                         example: 12453.86
-              example:
-                Идентификатор: 19ba-11ed-bd75-0242ac120002ЗЗмем
-                Реквизиты:
-                  Дата: '2022-12-31T00:00:01'
-                  Организация: '7714103163'
-                  Содержание: Статистика АПИ
-                  Комментарий: Тесткоммент
-                РасчетСтатистики:
-                  - Контрагент: 004c9ffa-79ba-11ed-bd75-0242ac120002ФЛ
-                    Займ: 19ba-11ed-bd75-0242ac120002ЗЗайм
-                    ТекущаяЗадолженность: 10000
-                    ТекущаяЗадолженностьОсновнойДолг: 5000
-                    ДатаПоследнегоПлатежа: '2022-12-10'
-                    ВыходилНаПросрочку: true
-                    СуммаСреднемесячногоПлатежа: 12453.86
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                      Займ:
+                        $ref: '#/components/schemas/Займ'
+                      КоличествоДнейПросрочкиНаНачалоДня:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                РасчетРасширеннойСтатистики:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                        - Контрагент
+                        - Займ
+                    properties:
+                      ДатаПоследнегоПлатежаОсновнойДолг: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПлатежаПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПропущенногоПлатежа: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиОсновнойДолг: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиКомиссии: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиПени: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиШтрафы: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиПрочие: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиСудебныеПени: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиСудебныеШтрафы: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиСудебныеПрочие: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ПросроченнаяЗадолженностьКомиссии:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьПени:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьШтрафы:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьПрочие:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьСудебныеПени:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьСудебныеШтрафы:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьСудебныеПрочие:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДнейПросрочкиОсновнойДолг:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДнейПросрочкиПроценты:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДатаНачалаПросрочки: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ЧислоПросрочек:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДлительностьПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      МаксимальноеЧислоДнейПросрочкиЗаМесяц:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      МаксимальноеЧислоДнейПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ВыходилНаПросрочку:
+                        type: boolean
+                        example: false
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                      Займ:
+                        $ref: '#/components/schemas/Займ'
+                РасчетСтатистикиБКИ:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                        - Контрагент
+                        - Займ
+                    properties:
+                      ТекущаяЗадолженность:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженностьОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженностьПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПлатежа: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      СуммаПоследнегоПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоПлатежаОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоПлатежаПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежей:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежейОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежейПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПропущенногоПлатежаОД: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПропущенногоПлатежаПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПлатежаВГрафике: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженности: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ПросроченнаяЗадолженность:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПродолжительностьПоследнейПогашеннойПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ЗадолженностьВДатуПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ЗадолженностьВДатуПлатежаОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ЗадолженностьВДатуПлатежаПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПлатежейБезУчетаПросрочкиЗаТекущийМесяц:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПлатежейБезУчетаПросрочкиЗа24ПрошедшихМесяца:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоВнесенногоПлатежаЧастиСПросрочкойБолее30КалендарныхДней:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаВсехОставшихсяПлатежейПоОбязательству:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаРасчетаПСК: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      СуммаЧастичноПереуступленнойЗадолженности:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнейВыдачи: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаРасчетаВСП: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаРасчетаПСКБазовая: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаРасчетаПСКМинимальная: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаРасчетаПСКМаксимальная: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаРасчетаПСКМаксимальнаяСнятиеНаличных: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаРасчетаПСКМаксимальнаяБезналичныйПорядок: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаРасчетаПДН: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                      Займ:
+                        $ref: '#/components/schemas/Займ'
+                РасчетСтатистикиСписанныхЗаймов:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                        - Контрагент
+                        - Займ
+                    properties:
+                      ДатаЗаключенияДоговора: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаСписания: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ТекущаяЗадолженность:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженностьОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженностьПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПлатежа: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      СуммаПоследнегоПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоПлатежаОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоПлатежаПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежей:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежейОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежейПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПропущенногоПлатежаОД: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПропущенногоПлатежаПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженности: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ПросроченнаяЗадолженность:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПродолжительностьПоследнейПогашеннойПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДнейПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ЗадолженностьВДатуПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ЗадолженностьВДатуПлатежаОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ЗадолженностьВДатуПлатежаПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПлатежаВГрафике: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      КоличествоДнейПросрочкиНаНачалоДня:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      СуммаЧастичноПереуступленнойЗадолженности:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПлатежейБезУчетаПросрочкиЗаТекущийМесяц:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПлатежейБезУчетаПросрочкиЗа24ПрошедшихМесяца:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоВнесенногоПлатежаЧастиСПросрочкойБолее30КалендарныхДней:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаРасчетаВСП: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиОсновнойДолг: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженностиПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ВыходилНаПросрочку:
+                        type: boolean
+                        example: false
+                      ДатаПоследнегоПлатежаОсновнойДолг: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПлатежаПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПропущенногоПлатежа: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      СуммаСреднемесячногоПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                      Займ:
+                        $ref: '#/components/schemas/Займ'
+
+                РасчетСтатистикиПоручительств:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                        - Контрагент
+                        - Займ
+                    properties:
+                      СуммаПоДоговору:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженность:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженностьОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ТекущаяЗадолженностьПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПлатежа: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      СуммаПоследнегоПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоПлатежаОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоПлатежаПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежей:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежейОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ОбщаяСуммаПлатежейПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПропущенногоПлатежаОД: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПропущенногоПлатежаПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаВозникновенияПросроченнойЗадолженности: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ПросроченнаяЗадолженность:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПросроченнаяЗадолженностьПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ПродолжительностьПоследнейПогашеннойПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ДнейПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 6
+                        example: 123
+                      ЗадолженностьВДатуПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ЗадолженностьВДатуПлатежаОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ЗадолженностьВДатуПлатежаПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаСреднемесячногоПлатежа:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаРасчетаСреднемесячногоПлатежа: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ИмеютсяРасчетыПоДоговору:
+                        type: boolean
+                        example: false
+                      СуммаПлатежейБезУчетаПросрочкиЗаТекущийМесяц:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПлатежейБезУчетаПросрочкиЗа24ПрошедшихМесяца:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаПоследнегоВнесенногоПлатежаЧастиСПросрочкойБолее30КалендарныхДней:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      ДатаПоследнегоПлатежаОсновнойДолг: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      ДатаПоследнегоПлатежаПроценты: 
+                        type: string
+                        format: date
+                        example: '2024-12-10'
+                        description: Дата
+
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                      ДоговорПоручительства:
+                        $ref: '#/components/schemas/Идентификатор'
+                        type: string
+                        example: 2d6bdcb1-08d1-11ed-8dcb-50e549b16b6b
+                        description: идентификатор Виды событий расчета показателей по займам. Справочник АЭ_ВидыСобытийРасчетаПоказателейПоЗаймам
+
+                РасчетСтатистикиПСК:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                        - Контрагент
+                        - Займ
+                    properties:
+                      ВидПСК: 
+                        $ref: '#/components/schemas/Идентификатор'
+                        type: string
+                        example: ПСКБазовая
+                        description: идентификатор Виды полной стоимости займа (ПСК). Справочник АЭ_ВидыПолнойСтоимостиЗаймаПСК
+
+                      ПолнаяСтоимостьЗайма: 
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.001
+                        example: 12453.123
+                      ПолнаяСтоимостьЗаймаВДенежномВыражении: 
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СуммаЗайма: 
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 12453.86
+                      СобытиеРасчетаПСК:
+                        $ref: '#/components/schemas/Идентификатор'
+                        type: string
+                        example: ПервоначальныйРасчетПриЗаключенииДоговора
+                        description: идентификатор Виды событий расчета показателей по займам. Справочник АЭ_ВидыСобытийРасчетаПоказателейПоЗаймам
+
+
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                      Займ:
+                        $ref: '#/components/schemas/Займ'
+                      КатегорияПСК:
+                        $ref: '#/components/schemas/Идентификатор'
+                        type: string
+                        example: 2d6bdcb1-08d1-11ed-8dcb-50e549b16b6b
+                        description: идентификатор Категории ПСК потребительских займов.  СправочникСсылка.АЭ_КатегорииПСКПотребительскихЗаймов
+
+
+
       parameters:
 
         - name: node
