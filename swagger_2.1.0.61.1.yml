@@ -13644,7 +13644,7 @@ paths:
                     type: object
                     required:
                         - Контрагент
-                        - Займ
+                        - ДоговорПоручительства
                     properties:
                       СуммаПоДоговору:
                         type: number
