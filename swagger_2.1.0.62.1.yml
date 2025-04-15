@@ -1053,10 +1053,10 @@ paths:
                       $ref: '#/components/schemas/ВидКонтрагента' 
 
 
-                    ИННПроверенВФНС:
-                      type: boolean
-                      description: 'Если ИНН проверен в ФНС, то истина'
-                      example: false
+                  #  ИННПроверенВФНС:
+                   #   type: boolean
+                    #  description: 'Если ИНН проверен в ФНС, то истина'
+                     # example: false
                     ОКАТО:
                       example: '12345678901'
                       type: string
