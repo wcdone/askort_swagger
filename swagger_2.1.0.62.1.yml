@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: 'Программный интерфейс (API) для интеграции с 1С:Управление МФО и КПК'
   description: 'Список методов API для интеграции с 1С:Управление МФО и КПК в нотации Swagger'
-  version: '2.1.0.61.3'
+  version: '2.1.0.62.1'
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
