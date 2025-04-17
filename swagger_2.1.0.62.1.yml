@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   title: 'Программный интерфейс (API) для интеграции с 1С:Управление МФО и КПК'
-  description: 'Список методов API для интеграции с 1С:Управление МФО и КПК в нотации Swagger'
-  version: '2.1.0.62.1'
+  description: 'Список методов API для интеграции с 1С:Управление МФО и КПК в нотации Swagger 2.1.0.62.1''
+  version: '2.0'
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
@@ -39066,7 +39066,7 @@ paths:
     post:
       tags:
         - Займы сбережения
-      summary: Получить выплаты по займам (сбережениям)
+      summary: Получить информации о привлечениях и выплатах по займам (сбережениям)
       description: Метод возвращает выплаты по займам (сбережениям)
         
       requestBody:
