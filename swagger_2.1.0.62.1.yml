@@ -37735,7 +37735,6 @@ paths:
 
 
 
-#готово до сюда
 #--- Займы (сбережения) start
 
   '/loan_deposit_create/v1.0/{node}':
@@ -38187,11 +38186,13 @@ paths:
                         Публичный идентификатор контрагента
                     ПроводитьФормируемыеДокументы:
                       type: boolean
-                      description: Булево значение, по умолчанию Ложь
+                      description: Булево значение. По умолчанию - ложь
+                      example: false
                       default: false
                     ОтражатьОплатуТекущимДокументом:
                       type: boolean
-                      description: Булево значение, по умолчанию Истина
+                      description: Булево значение. По умолчанию - истина
+                      example: true
                       default: true
                     Комментарий:
                       $ref: '#/components/schemas/Комментарий' 
@@ -38272,7 +38273,7 @@ paths:
         '404':
           $ref: '#/components/responses/404'
 
-
+#TODO: уточнить булево
   '/loan_deposit_accruals_create/v1.0/{node}':
     post:
       tags:
@@ -38308,8 +38309,9 @@ paths:
                     ВводОстатков:
                       type: boolean
                       description: >-
-                        true - если используется режим ввода остатков
-                      example: true
+                        true - если используется режим ввода остатков. По умолчанию - ложь
+                      default: false
+                      example: false
                   required:
                     - Дата
                     - Организация
@@ -38610,11 +38612,13 @@ paths:
                         Публичный идентификатор контрагента
                     ПроводитьФормируемыеДокументы:
                       type: boolean
-                      description: Булево значение, по умолчанию Ложь
+                      description: Булево значение. По умолчанию - ложь
                       default: false
+                      example: false
                     ОтражатьОплатуТекущимДокументом:
                       type: boolean
-                      description: Булево значение, по умолчанию Истина
+                      description: Булево значение. По умолчанию - истина
+                      example: true
                       default: true
                     Комментарий:
                       $ref: '#/components/schemas/Комментарий' 
@@ -42960,8 +42964,10 @@ paths:
                     ВводОстатков:
                       type: boolean
                       description: >-
-                        true - если используется режим ввода остатков
-                      example: true
+                        true - если используется режим ввода остатков. По умолчанию - ложь
+                      default: false
+                      example: false
+
                     Комментарий:
                       $ref: '#/components/schemas/Комментарий'
 
@@ -43443,12 +43449,15 @@ paths:
                         Публичный идентификатор контрагента
                     ПроводитьФормируемыеДокументы:
                       type: boolean
-                      description: Булево значение, по умолчанию Ложь
+                      description: Булево значение. По умолчанию - ложь
                       default: false
+                      example: false
+
                     ОтражатьОплатуТекущимДокументом:
                       type: boolean
-                      description: Булево значение, по умолчанию Истина
+                      description: Булево значение. По умолчанию - истина
                       default: true
+                      example: true
                     ДокументОснование:
                       $ref: '#/components/schemas/Идентификатор'
                       description: Идентификатор документа основания
@@ -43579,16 +43588,20 @@ paths:
                       $ref: '#/components/schemas/Контрагент' 
                     ПроводитьФормируемыеДокументы:
                       type: boolean
-                      description: Булевое значение, по умолчанию Ложь
+                      description: Булево значение. По умолчанию - ложь
                       default: false
+                      example: false
+
+                    ОтражатьОплатуТекущимДокументом:
+                      type: boolean
+                      description: Булево значение. По умолчанию - истина
+                      default: true
+                      example: true
                     ДокументОснование:
                       type: string
                       description: Идентификатор документа основания
                       example: "b1002393-fa88-11eb-8538-50e549b16bИП"
-                    ОтражатьОплатуТекущимДокументом:
-                      type: boolean
-                      description: Булевое значение, по умолчанию Истина
-                      default: true
+
                     Комментарий:
                       $ref: '#/components/schemas/Комментарий' 
                 Взносы:
@@ -45281,6 +45294,8 @@ paths:
 #--- Хозяйственная деятельность start
 
 
+#готово до сюда
+
   '/payment_order_create/v1.0/{node}':
     post:
       tags:
@@ -45310,8 +45325,9 @@ paths:
                   type: boolean
                   description: >-
                         true - при создании объекта документ будет создан не проведён
-                        false - по умолчанию
+                        По умолчанию - ложь
                   example: false
+                  default: false
                                
                 Реквизиты:
                   type: object
@@ -45442,8 +45458,9 @@ paths:
                   type: boolean
                   description: >-
                         true - при создании объекта документ будет создан не проведён
-                        false - по умолчанию
+                        По умолчанию - ложь
                   example: false
+                  default: false
                                
                 Реквизиты:
                   type: object
@@ -45572,8 +45589,9 @@ paths:
                   type: boolean
                   description: >-
                         true - при создании объекта документ будет создан не проведён
-                        false - по умолчанию
+                        По умолчанию - ложь
                   example: false
+                  default: false
                                
                 Реквизиты:
                   type: object
@@ -45699,8 +45717,9 @@ paths:
                   type: boolean
                   description: >-
                         true - при создании объекта документ будет создан не проведён
-                        false - по умолчанию
+                        По умолчанию - ложь
                   example: false
+                  default: false
                                
                 Реквизиты:
                   type: object
@@ -45828,8 +45847,9 @@ paths:
                   type: boolean
                   description: >-
                         true - при создании объекта документ будет создан не проведён
-                        false - по умолчанию
+                        По умолчанию - ложь
                   example: false
+                  default: false
                                
                 Реквизиты:
                   type: object
@@ -45956,8 +45976,9 @@ paths:
                   type: boolean
                   description: >-
                         true - при создании объекта документ будет создан не проведён
-                        false - по умолчанию
+                        По умолчанию - ложь
                   example: false
+                  default: false
                                
                 Реквизиты:
                   type: object
@@ -47394,7 +47415,9 @@ paths:
                   description: Публичный идентификатор, если пуст, будет создан
                 ОткрыватьАвтоматическиЛицевыеСчета:
                   type: boolean
-                  description: Флаг открывать ли автоматически лицевые счета
+                  description: Флаг открывать ли автоматически лицевые счета. По умолчанию - ложь
+                  default: false
+                  example: false
                 Реквизиты:
                   type: object
                   properties:
@@ -47430,14 +47453,18 @@ paths:
                       description: Раздел учета из перечисления АЭ_РазделыУчета
                     ДоговорПодписан:
                       type: boolean
-                      description: Флаг подписания договора
+                      description: Флаг подписания договора. По умолчанию - ложь
+                      default: false
+                      example: false
                     Сумма:
                       type: number
                       format: double
                       description: Общая сумма договора
                     СуммаВключаетНДС:
                       type: boolean
-                      description: Флаг включения НДС в сумму
+                      description: Флаг включения НДС в сумму. По умолчанию - ложь
+                      default: false
+                      example: false
 
                     СтавкаНДС:
                       $ref: '#/components/schemas/СтавкаНДС'
@@ -47447,7 +47474,9 @@ paths:
                       description: Сумма НДС
                     ДоговорЗакрыт:
                       type: boolean
-                      description: Флаг закрытия договора
+                      description: Флаг закрытия договора. По умолчанию - ложь
+                      default: false
+                      example: false
                     СрокОплаты:
                       type: integer
                       description: Срок оплаты
@@ -47463,10 +47492,14 @@ paths:
                       description: Публичный идентификатор Виды взаиморасчетов
                     ОперацияЗаСчетВПользуФизическихЛиц:
                       type: boolean
-                      description: Флаг операции за счет в пользу физических лиц
+                      description: Флаг операции за счет в пользу физических лиц. По умолчанию - ложь
+                      default: false
+                      example: false
                     ДенежныеЭквиваленты:
                       type: boolean
-                      description: Флаг денежных эквивалентов
+                      description: Флаг денежных эквивалентов. По умолчанию - ложь
+                      default: false
+                      example: false
                   required:
                     - ВидДоговора
                     - Дата
@@ -47537,7 +47570,8 @@ paths:
                       $ref: '#/components/schemas/ПодразделениеОрганизации'
                     ПоступлениеНаСчетТекущихРасчетов:
                       type: boolean
-                      description: Булево значение, указывающее, является ли ПоступлениеНаСчетТекущихРасчетов
+                      description: Булево значение, указывающее, является ли ПоступлениеНаСчетТекущихРасчетов. По умолчанию - ложь
+                      default: false
                       example: false
                     Комментарий:
                       $ref: '#/components/schemas/Комментарий' 
