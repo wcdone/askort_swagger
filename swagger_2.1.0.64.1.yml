@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: 'Программный интерфейс (API) для интеграции с 1С:Управление МФО и КПК'
-  description: 'Список методов API для интеграции с 1С:Управление МФО и КПК в нотации Swagger 2.1.0.63.1'
+  description: 'Список методов API для интеграции с 1С:Управление МФО и КПК в нотации Swagger 2.1.0.64.1'
   version: '2.0'
 servers:
   # Added by API Auto Mocking Plugin
@@ -29,7 +29,7 @@ tags:
   - name: Контрагенты
   - name: Обеспечение займов предоставленных (залоги и поручительства)
   - name: Заявки, Займы предоставленные, Графики, Дополнительные соглашения
-
+  - name: Кредитный лимит
 
   #- name: Сбережения
   - name: Взаиморасчеты по займам предоставленным
@@ -29760,6 +29760,566 @@ paths:
 
 
 #---Заявки, Займы предоставленные, Графики, Дополнительные соглашения end
+
+#--- кредитный лимит start
+#ok
+  '/credit_limit_create/v1.0/{node}':
+    post:
+      tags:
+        - Кредитный лимит
+      summary: Создать кредитный лимит
+      description: >-
+        Создает документ кредитный лимит.
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  type: string
+                  maxLength: 100
+                  example: 047dd205-c04f-4ac8-8b03-60e1456e5d27
+                  description: >-
+                    Уникальный идентификатор займа, если не указан, то
+                    идентификатор будет сгенерирован автоматическина на основе
+                    ссылки созданного в БД займа (GUID)
+
+                Реквизиты:
+                  type: object
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация'
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент'
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2023-02-20T09:15:28.032+00:00"
+                      description: Дата документа
+                    НомерДоговора:
+                      type: string
+                      example: "ЛимитАпи1"
+                      maxLength: 100
+                    ДатаДоговора:
+                      type: string
+                      format: date
+                      example: "2023-02-20"
+                    ДатаНачала:
+                      type: string
+                      format: date
+                      example: "2023-02-20"
+                    ДатаОкончания:
+                      type: string
+                      format: date
+                      example: "2023-08-20"
+                    ТипКредитногоЛимита:
+                      type: string
+                      description: перечисление АЭ_ТипыКредитныхЛимитов
+                    #  enum: ["КредитныйЛимит", "Овердрафт", "КредитнаяЛиния"]
+                      example: "КредитныйЛимит"
+                    ВидКредитногоЛимита:
+                      type: string
+                      description: перечисление АЭ_ВидыКредитныхЛимитов
+                      #enum: ["Возобновляемый", "Невозобновляемый", "Револьверный"]
+                      example: "Возобновляемый"
+                    ФинансовыйПродукт:
+                      $ref: '#/components/schemas/ФинансовыйПродукт'
+                      example: "eb0ea70f-b25d-11ef-89e7-00090ffe0001"
+                    ДеньВыписки:
+                      type: integer
+                      example: 20
+                      minimum: 1
+                      maximum: 31
+                    КоличествоПлатежныхПериодов:
+                      type: integer
+                      example: 6
+                    ЛимитКредитования:
+                      type: number
+                      format: double
+                      example: 100000
+                    Комментарий:
+                      type: string
+                      example: "Коммент"
+                    ИспользоватьЛьготныйПериодПриНачисленииПроцентов:
+                      type: boolean
+                      example: true
+                    КоличествоДнейЛьготногоПериода:
+                      type: integer
+                      example: 25
+                    КонтролироватьОграничениеНаСуммуВыдачВРамкахЗайма:
+                      type: boolean
+                      example: true
+                    МаксимальнаяСуммаВозможныхТраншей:
+                      type: string
+                      example: "1000000"
+                    КонтролироватьСрокПросрочкиДляВозобновленияКредитногоЛимита:
+                      type: boolean
+                      example: true
+                    МаксимальноеКоличествоДнейПросрочкиДляВозобновленияКредитногоЛимита:
+                      type: integer
+                      example: 25
+                    КонтролироватьСрокПросрочкиДляПриостановкиКредитногоЛимита:
+                      type: boolean
+                      example: true
+                    СрокПросрочкиДляПриостановкиКредитногоЛимита:
+                      type: integer
+                      example: 15
+                    СпособВосстановленияЛимитаКредитования:
+                      type: string
+                     # enum: ["ПриПогашенииПросроченнойЗадолженности", "ПриПолномПогашенииЗадолженности", "ЕжемесячноВДеньВыписки"]
+                      description: перечисление АЭ_СпособыВосстановленияЛимитовКредитования
+                      example: "ПриПогашенииПросроченнойЗадолженности"
+                    ВариантУчетаТраншейДляРеглОтчетности:
+                      type: string
+                      #enum: ["ПроизвольныеТранши", "ПоДатеВыдачи", "ПоДатеПогашения"]
+                      description: перечисление АЭ_ВариантыУчетаТраншейДляРеглОтчетности
+                      example: "ПроизвольныеТранши"
+                    ПереноситьДатуПлатежаЛьготногоПериодаНаРабочийДень:
+                      type: boolean
+                      example: true
+                    ИспользоватьЛьготныйПериодПриНачисленииПроцентовДляКаждогоТранша:
+                      type: boolean
+                      example: true
+                    КоличествоДнейЛьготногоПериодаТранша:
+                      type: integer
+                      example: 5
+                  required:
+                    - Организация
+                    - Контрагент
+                    - Дата
+                    - ДатаНачала
+                    - ДатаОкончания
+                    - ФинансовыйПродукт
+                    - ЛимитКредитования
+
+                ПараметрыРасчетаПДН:
+                  $ref: '#/components/schemas/ПараметрыРасчетаПДН'
+                
+              required:
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  КредитныеЛимиты:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+#ок
+  '/loan_tranche_create/v1.0/{node}':
+    post:
+      tags:
+        - Кредитный лимит
+      summary: Создать транш
+      description: >-
+        Создает транш по займу с лимитом кредитования.
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  type: string
+                  maxLength: 100
+                  example: 047dd205-c04f-4ac8-8b03-60e1456e5d27
+                  description: >-
+                    Уникальный идентификатор займа, если не указан, то
+                    идентификатор будет сгенерирован автоматическина на основе
+                    ссылки созданного в БД займа (GUID)
+                Реквизиты:
+                  type: object
+                  properties:
+                    Наименование:
+                      type: string
+                      example: "Транш2"
+                      maxLength: 100
+                      description: >
+                        Наименование транша. Если не указано, будет сформировано автоматически
+                        в формате "Транш + НомерТранша + (Представление займа)"
+                    Займ:
+                      $ref: '#/components/schemas/ОсновнойЗайм'
+                      example: "d424cf77-b61f-11ee-b10f-00090ffe0001_Лимит"
+                      description: Идентификатор основного займа
+                    НомерТранша:
+                      type: integer
+                      example: 1
+                      description: Номер транша
+                    Организация:
+                      $ref: '#/components/schemas/Организация'
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    ФинансовыйПродукт:
+                      $ref: '#/components/schemas/ФинансовыйПродукт'
+                    НоменклатурнаяГруппа:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: >
+                        Номенклатурная группа (дополнительная аналитика). Необязательный параметр.
+                  required:
+                    - Займ
+              required:
+                - Реквизиты
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ТраншиЗаймовПредоставленных:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+#ок
+  '/credit_limit_additional_agreement_create/v1.0/{node}':
+    post:
+      tags:
+        - Кредитный лимит
+      summary: Создать дополнительное соглашение к кредитному лимиту
+      description: >-
+        Создает доп. соглашение к кредитному лимиту.
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  type: string
+                  maxLength: 100
+                  example: 047dd205-c04f-4ac8-8b03-60e1456e5d27
+                  description: >-
+                    Уникальный идентификатор займа, если не указан, то
+                    идентификатор будет сгенерирован автоматическина на основе
+                    ссылки созданного в БД займа (GUID)
+
+                Реквизиты:
+                  type: object
+                  properties:
+                    Дата:
+                      example: '2024-02-20T00:00:00'
+                      type: string
+                      format: date-time
+                      description: Дата документа
+                    ОсновнойДоговор:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Основной кредитный лимит
+                    ВидДополнительногоСоглашения:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Вид дополнительного соглашения
+                    НомерДоговора:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: Номер договора
+                    ДатаДоговора:
+                      type: string
+                      format: date-time
+                      example: '2020-02-20T00:00:00'
+                      description: Дата договора
+                    ДатаНачала:
+                      type: string
+                      format: date-time
+                      example: '2020-02-20T00:00:00'
+                      description: Дата начала
+                    ДатаОкончания:
+                      type: string
+                      format: date-time
+                      example: '2020-03-02T00:00:00'
+                      description: Дата окончания
+                    ВидКредитногоЛимита:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Вид кредитного лимита
+                    ТипКредитногоЛимита:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Тип кредитного лимита
+                    ФинансовыйПродукт:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Финансовый продукт
+                    ДеньВыписки:
+                      type: integer
+                      example: 15
+                      description: День выписки
+                    КоличествоПлатежныхПериодов:
+                      type: integer
+                      example: 12
+                      description: Количество платежных периодов
+                    ИспользоватьЛьготныйПериодПриНачисленииПроцентов:
+                      type: boolean
+                      example: true
+                      description: Использовать льготный период при начислении процентов
+                    КоличествоДнейЛьготногоПериода:
+                      type: integer
+                      example: 30
+                      description: Количество дней льготного периода
+                    ИспользоватьЛьготныйПериодПриНачисленииПроцентовДляКаждогоТранша:
+                      type: boolean
+                      example: false
+                      description: Использовать льготный период для каждого транша
+                    КоличествоДнейЛьготногоПериодаТранша:
+                      type: integer
+                      example: 15
+                      description: Количество дней льготного периода транша
+                    КонтролироватьОграничениеНаСуммуВыдачВРамкахЗайма:
+                      type: boolean
+                      example: true
+                      description: Контролировать ограничение на сумму выдач в рамках займа
+                    МаксимальнаяСуммаВозможныхТраншей:
+                      type: number
+                      format: double
+                      example: 1000000.00
+                      description: Максимальная сумма возможных траншей
+                    КонтролироватьСрокПросрочкиДляВозобновленияКредитногоЛимита:
+                      type: boolean
+                      example: false
+                      description: Контролировать срок просрочки для возобновления кредитного лимита
+                    МаксимальноеКоличествоДнейПросрочкиДляВозобновленияКредитногоЛимита:
+                      type: integer
+                      example: 5
+                      description: Максимальное количество дней просрочки для возобновления кредитного лимита
+                    ПереноситьДатуПлатежаЛьготногоПериодаНаРабочийДень:
+                      type: boolean
+                      example: true
+                      description: Переносить дату платежа льготного периода на рабочий день
+                    СпособВосстановленияЛимитаКредитования:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Способ восстановления лимита кредитования
+                    ВариантУчетаТраншейДляРеглОтчетности:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Вариант учета траншей для регуляторной отчетности
+                    СрокПросрочкиДляПриостановкиКредитногоЛимита:
+                      type: integer
+                      example: 30
+                      description: Срок просрочки для приостановки кредитного лимита
+                    КонтролироватьСрокПросрочкиДляПриостановкиКредитногоЛимита:
+                      type: boolean
+                      example: true
+                      description: Контролировать срок просрочки для приостановки кредитного лимита
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                    ПроцентныеСтавки:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          УсловиеПроцентнойСтавки:
+                            $ref: '#/components/schemas/Идентификатор'
+                            description: Условие процентной ставки
+                          ПроцентнаяСтавка:
+                            type: number
+                            format: double
+                            example: 12.5
+                            description: Значение процентной ставки
+                          ПроцентнаяСтавкаПериодичность:
+                            type: string
+                            enum: [Год, День, Месяц, ГодПоМесяцам, ПоГрафикуПлатежей]
+                            default: Год
+                            description: Периодичность процентной ставки
+                  required:
+                    - Дата
+                    - ОсновнойДоговор
+
+
+              required:
+                - Реквизиты
+                - Идентификатор
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ДопСоглашениеКредитногоЛимита:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+#ок
+  '/credit_limit_change_create/v1.0/{node}':
+    post:
+      tags:
+        - Кредитный лимит
+      summary: Создать изменение лимита кредитования
+      description: >-
+         Создает документ обеспечивающий процесс увеличения/уменьшения суммы лимита в рамках кредитного лимита.
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  type: string
+                  maxLength: 100
+                  example: 047dd205-c04f-4ac8-8b03-60e1456e5d27
+                  description: >-
+                    Уникальный идентификатор займа, если не указан, то
+                    идентификатор будет сгенерирован автоматическина на основе
+                    ссылки созданного в БД займа (GUID)
+
+
+                Реквизиты:
+                  type: object
+                  properties:
+                    Дата:
+                      example: '2024-02-20T00:00:00'
+                      type: string
+                      format: date-time
+                      description: Дата документа
+                    Организация:
+                      $ref: '#/components/schemas/Организация'
+                      description: Организация (идентифицируется по ИНН)
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                      description: Подразделение организации
+                    ВидОперации:
+                      type: string
+                      enum: [УстановкаКредитногоЛимита, ИзменениеКредитногоЛимита, ЗакрытиеКредитногоЛимита, ПриостановкаКредитногоЛимита]
+                      description: Вид операции
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент'
+                      description: Контрагент
+                    КредитныйЛимит:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Идентификатор кредитного лимита
+                    ПричинаИзменения:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Причина изменения лимита кредитования
+                    СуммаДокумента:
+                      type: number
+                      format: double
+                      example: 1000000.00
+                      description: >
+                        Сумма документа. Только для видов операции: 
+                        УстановкаКредитногоЛимита, ИзменениеКредитногоЛимита
+                    ЗапретитьАвтоматическоеИзменение:
+                      type: boolean
+                      example: false
+                      default: false
+                      description: >
+                        
+                    СобытиеИзмененияЛимитаКредитования:
+                      type: string
+                      enum: [УвеличениеЛимитаКредитования, УменьшениеЛимитаКредитования, БезИзменений, УстановкаЛимитаКредитования]
+                      description: >
+                        Событие изменения лимитов кредитования.
+                        Используется для Видов операции УстановкаКредитногоЛимита, 
+                        ИзменениеКредитногоЛимита, ЗакрытиеКредитногоЛимита.
+                        Если не передать, устанавливается по умолчанию:
+                        - Для Закрытия/Приостановки: БезИзменений
+                        - Для Установки: УстановкаЛимитаКредитования
+                        - Для Изменения: определяется по сравнению сумм
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий' 
+                  required:
+                    - Дата
+                    - Организация
+                    - ВидОперации
+                    - Контрагент
+                    - КредитныйЛимит
+                    - СуммаДокумента
+  
+
+              required:
+                - Реквизиты
+                - Идентификатор
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ИзменениеЛимитаКредитования:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+
+#--- кредитный лимит end
 
 #--- Взаиморасчеты по займам предоставленным start
 
