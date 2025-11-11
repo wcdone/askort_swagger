@@ -708,7 +708,7 @@ paths:
                       description: СреднемесячныйОбщийДоход
                     КатегорияСубъектаМалогоИлиСреднегоПредпринимательства:
                       $ref: '#/components/schemas/КатегорияСубъектаМалогоИлиСреднегоПредпринимательства' 
-
+                
                     СубъектМСП:
                       type: boolean
                       example: true
@@ -26645,7 +26645,108 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
-#bid_loan_update
+
+
+#TODO: исправить ответ
+  '/bid_loan_update/v1.0/{node}':
+    post:
+      tags:
+        - Заявки, Займы предоставленные, Графики, Дополнительные соглашения
+      summary: Обновить заявку на займ
+      description: >-
+        Обновляет указанные реквизиты заявки на предоставление займа.
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - Идентификатор
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description: Публичный идентификатор обновляемой заявки
+                Реквизиты:
+                  type: object
+                  properties:
+                    ОбеспеченныйЗаймЗалоги:
+                      type: boolean
+                      example: false
+                      description: true - если заявка помечена как обеспеченная залогом
+                    ОбеспеченныйЗаймПоручительство:
+                      type: boolean
+                      example: false
+                      description: true - если заявка помечена как обеспеченная поручителем
+                    РасчетНачисленийВоВнешнейПрограмме:
+                      type: boolean
+                      example: false
+                      description: >-
+                        true - начисления будут загружаться из внешней системы,
+                        false - начисления рассчитываются в 1С
+                    БанковскийСчетКонтрагента:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'
+                    ПоказательДолговойНагрузки:
+                      type: number
+                      format: double
+                      example: 79.44
+                      description: Значение предельной долговой нагрузки в процентах или сумме (в зависимости от настроек)
+                    
+                    СпособВыдачиЗайма:
+                      $ref: '#/components/schemas/Идентификатор'
+                      example: БезналичныеБанк
+                    СпособОплатыЗайма:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор формы оплаты (ФормаОплаты)
+                      example: БезналичныеБанк
+                    ПроцентнаяСтавка:
+                      type: number
+                      format: float
+                      example: 1
+                      description: Значение процентной ставки (если требуется обновить)
+
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+                    УИДСделки:
+                      type: string
+                      example: 59e2727a-7c65-11ed-aa31-00090ffe0001-3
+                      description: Уникальный идентификатор сделки (UID)
+                    
+                    Агент:
+                      $ref: '#/components/schemas/Контрагент'
+                    Менеджер:
+                      $ref: '#/components/schemas/Контрагент'
+                ПараметрыРасчетаПДН:
+                  $ref: '#/components/schemas/ПараметрыРасчетаПДНЗаявка'
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  Заявки:
+                    - Идентификатор: 004c9ffa-79ba-11ed-bd75-0242ac120002Заявка
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
 
   '/loan_based_bid_create/v1.0/{node}':
     post:
@@ -28891,6 +28992,7 @@ paths:
                       СтатусЗаявкиПредставление: ''
                       СтатусЗаявки: null
                       ДатаСтатусаЗаявки: '0001-01-01T00:00:00'
+                      УникальныйИдентификаторДляВыгрузкиВБКИ: "59e2727a-7c65-11ed-aa31-00090ffe0001-3"
                       СрокЗаймаПредставление: 30 дней
                     ГрафикПлатежей:
                       - ДатаПлатежа: '2022-06-08T00:00:00'
@@ -30189,7 +30291,226 @@ paths:
         '404':
           $ref: '#/components/responses/404'
 
+
+
+#TODO: исправить ответ
 #'/credit_limit_update/v1.0/{node}':
+#
+
+  '/credit_limit_update/v1.0/{node}':
+    post:
+      tags:
+        - Прочие операции по займам предоставленным 
+      summary: Обновить займ 
+      description: >-
+        Метод позволяет обновить только переданные данные в документе АЭ_ЗаймПредоставленный, может обновлять как займ так и ДС к займу
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  type: string
+                  maxLength: 100
+                  example: 047dd205-c04f-4ac8-8b03-60e1456e5d27
+                  description: >-
+                     Уникальный идентификатор займа для обновления
+                ОткрытьЛицевыеСчета:
+                  type: boolean
+                  description: >-
+                    необязательный признак ОткрытьЛицевыеСчета,
+                    "ОткрытьЛицевыеСчета": true
+                    запускает процедуру создания лицевых счетов по займу, независимо от
+                    включения/выключения настройки автоматического открытия л/с в учетной
+                    политике
+                    "ОткрытьЛицевыеСчета": false, значение по умолчанию, в данном случае сервис
+                    ориентируется на учетную политику
+                  example: false
+                  default: false
+                ДоговорПодписан:
+                  type: boolean
+                  description: >-
+                    необязательный признак может принимать значения true|false, по умолчанию false, при установке в значение true, в договоре займа устанавливается флаг Договор подписан
+                  example: false
+                
+                Реквизиты:
+                  type: object
+                  properties:
+                    ОбеспеченныйЗаймЗалоги:
+                      example: false
+                      type: boolean
+                      description: true - если займ обеспечен залогом
+                    ОбеспеченныйЗаймПоручительство:
+                      example: false
+                      type: boolean
+                      description: true - если займ обеспечен поручителем
+                    НомерДоговора:
+                      type: string
+                      example: 2020-ГЛ001
+                      maxLength: 100
+                      description: НомерДоговора
+                    РасчетНачисленийВоВнешнейПрограмме:
+                      type: boolean
+                      example: true
+                      description: >-
+                        true - предполгается загрузка начислений из внешней
+                        системы, false - начисления расчитываются в 1С:УМФО
+                        (начисления осуществляются регламентными операциями)
+                    ПоказательДолговойНагрузки:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      minimum: 0.01
+                      example: 10000.01
+                      description: Значение предельной долговой нагрузки физлица
+                    БанковскийСчетКонтрагента:
+                      $ref: '#/components/schemas/БанковскийСчетКонтрагента'                
+                    СпособВыдачиЗайма:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентифкикатор способа выдачи 
+                      example: БезналичныеБанк
+                    СпособОплатыЗайма:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор способа оплаты 
+                      example: БезналичныеБанк
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+                    УИДСделки:
+                      type: string
+                      description: Уид сделки расчитанный по правилам цб
+                      example: 155cc441-fb3e-4b9a-a450-661bdc3eae48                    
+                    Агент:
+                      $ref: '#/components/schemas/Контрагент'    
+                      description: Публичный идентификатор контрагента. Заполняется в случае, если в финпродукте указан способ выдачи через агента
+                      example: 155cc441-fb3e-4b9a-a450-661bdc3eae48                     
+                    
+                    Менеджер:
+                      $ref: '#/components/schemas/Контрагент'
+                    ПортфельРезерваПодОбесценение:
+                      type: string
+                      description: Публичный идентификатор портфеля РО
+                      example: ИдентификаторПортфеляРО
+                 
+                ПараметрыРасчетаПДН:
+                  $ref: '#/components/schemas/ПараметрыРасчетаПДН'
+
+
+              required:
+                - Идентификатор
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  Займы:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+
+
+#TODO: исправить ответ
+
+  '/credit_limit_dsti_update/v1.0/{node}':
+    post:
+      tags:
+        - Кредитный лимит
+      summary: Обновить ПДН Кредитный лимит 
+      description: >-
+         Обновление регистра "Параметры расчета ПДН при предоставлении лимита кредитования".
+          Булево "УдалитьИсходныеЗаписи" по умолчанию false. Если не передана ДатаРасчета,
+         дата расчета автоматически равна Периоду.
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+
+                Организация:
+                    $ref: '#/components/schemas/Организация'
+                Контрагент:
+                    $ref: '#/components/schemas/Контрагент'
+                КредитныйЛимит:
+                      $ref: '#/components/schemas/КредитныйЛимит'
+                УдалитьИсходныеЗаписи:
+                  type: boolean
+                  description: "Если true — удаляются исходные записи по измерениям. По умолчанию false."
+                  default: false
+                  example: true
+                ДатаНачалаУдаления:
+                  type: string
+                  format: date
+                  description: "Дата начала удаления записей регистра. Игнорируется при УдалитьИсходныеЗаписи = false."
+                  example: "2025-03-02"
+                ПараметрыРасчетаПДН:
+                  type: array
+                  description: "Массив структур для записи в регистр"
+                  items:
+                    $ref: '#/components/schemas/ПараметрыРасчетаПДНКредитныЛимит'
+
+
+              required:
+                - Организация
+                - Контрагент
+                - КредитныйЛимит
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  Займы:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
 
 #ок
   '/loan_tranche_create/v1.0/{node}':
@@ -35954,6 +36275,82 @@ paths:
 
               required:
                 - Идентификатор
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  Займы:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+#TODO: исправить ответ
+
+  '/loan_dsti_update/v1.0/{node}':
+    post:
+      tags:
+        - Прочие операции по займам предоставленным 
+      summary: Обновить ПДН по займу
+      description: >-
+         Обновление регистра "Параметры расчета ПДН".
+          Булево "УдалитьИсходныеЗаписи" по умолчанию false. 
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+
+                Организация:
+                    $ref: '#/components/schemas/Организация'
+                Контрагент:
+                    $ref: '#/components/schemas/Контрагент'
+                КредитныйЛимит:
+                      $ref: '#/components/schemas/КредитныйЛимит'
+                УдалитьИсходныеЗаписи:
+                  type: boolean
+                  description: "Если true — удаляются исходные записи по измерениям. По умолчанию false."
+                  default: false
+                  example: true
+                ДатаНачалаУдаления:
+                  type: string
+                  format: date
+                  description: "Дата начала удаления записей регистра. Игнорируется при УдалитьИсходныеЗаписи = false."
+                  example: "2025-03-02"
+                ПараметрыРасчетаПДН:
+                  type: array
+                  description: "Массив структур для записи в регистр.Если не передана ДатаРасчета, дата расчета автоматически равна Периоду."
+                  items:
+                    $ref: '#/components/schemas/ПараметрыРасчетаПДН'
+
+
+              required:
+                - Организация
+                - Контрагент
+                - КредитныйЛимит
       responses:
         '200':
           description: JSON формат
@@ -51434,6 +51831,11 @@ components:
       maxLength: 100
       example: 8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd
       description: Публичный идентификатор Займа     
+    КредитныйЛимит:         # $ref: '#/components/schemas/КредитныйЛимит'     
+      type: string
+      maxLength: 100
+      example: 8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd
+      description: Публичный идентификатор Кредитного лимита
     Сбережение:         # $ref: '#/components/schemas/Сбережение'     
       type: string
       maxLength: 100
@@ -51802,11 +52204,119 @@ components:
           minimum: 0.01
           example: 10000.01
           description: Сумма среднемесячных доходов заёмщика
+
+    ПараметрыРасчетаПДНКредитныЛимит: #$ref: '#/components/schemas/ПараметрыРасчетаПДНКредитныЛимит'
+      type: object
+      properties:
+        Период:             
+          example: '2025-01-02T00:00:00'
+          type: string
+          format: data-time
+          description: Период
+
+        ДатаРасчета:             
+          example: '2025-01-02T00:00:00'
+          type: string
+          format: data-time
+          description: Дата расчета
+
+        ДанныйРасчетПДНВыполненНаОснованииЗаявки:
+          type: boolean
+          description: Булевое значение, по умолчанию Истина
+          default: true
+          example: true
+        ПоказательДолговойНагрузки:
+          type: number
+          format: double
+          maxLength: 15
+          minimum: 0.01
+          example: 10000.01
+          description: Показатель долговой нагрузки
+
+        Событие:
+          $ref: '#/components/schemas/Идентификатор'
+          type: string
+
+          example: ПервоначальныйРасчетПриЗаключенииДоговора
+          default: ПервоначальныйРасчетПриЗаключенииДоговора
+          description: идентификатор Виды событий расчета показателей по займам. Справочник АЭ_ВидыСобытийРасчетаПоказателейПоЗаймам
+        ПорядокУчетаДоходаПриРасчетеПДН:
+          type: string
+          enum:
+            - Упрощенный
+            - Обычный
+          example: Обычный
+        ИсточникИнформацииОДоходе:
+          type: string
+          example: КредитныйОтчетБКИ    
+          enum:
+            - ВыпискаИзПохозяйственнойКниги
+            - ВыпискаОСостоянииИндивидуальногоЛицевогоСчетаВСистемеОПС
+            - ВыпискаПоСчету
+            - ДокументыПодтверждающиеДоходыИПАдвокатовНотариусовИлиИныхЛиц
+            - Заявление
+            - Иное
+            - ИныеДокументыОДоходахЗаемщикаВыданныеГосОрганамиИДр
+            - ИныеДокументыУстановленныеМетодикойРасчетаПДН
+            - КредитныйОтчетБКИ
+            - НалоговаяДекларацияПоФорме3НДФЛ
+            - РасчетПоФорме6НДФЛ
+            - СведенияКБКИОСреднемесячныхПлатежах
+            - СведенияОДоходахВыплатахВПользуФЛПолученныеИзФНС
+            - СправкаОДоходахВСоответствииСП3СТ230НКРФ
+            - СправкаРаботодателя
+            - СправкаОРазмереПенсии
+            - СправкаОСуммеЕжемесячнойВыплаты
+            - Форма2НДФЛ
+            - СреднедушевойДоход
+        СреднемесячныйПлатежПоТекущемуЗайму:
+          type: number
+          format: double
+          maxLength: 15
+          minimum: 0.01
+          example: 10000.01
+          description: Среднемесячный платеж по текущему займу
+        СреднемесячныеПлатежиПоПрочимКредитам:
+          type: number
+          format: double
+          maxLength: 15
+          minimum: 0.01
+          example: 10000.01
+          description: Среднемесячные платежи по прочим кредитам
+        Регион:        
+          type: string
+          description: Региональный код
+          example: '71'
+        СреднедушевойДоходПоРегиону:
+          type: number
+          format: double
+          maxLength: 15
+          minimum: 0.01
+          example: 10000.01
+          description: Среднедушевой доход по региону
+        СуммаСреднемесячныхПлатежейПоВсемПотребительскимКредитам:
+          type: number
+          format: double
+          maxLength: 15
+          minimum: 0.01
+          example: 10000.01
+          description: Сумма среднемесячных платежей по всем потребительским кредитам
+      АктуальныйКредитныйЛимит:
+        $ref: '#/components/schemas/КредитныйЛимит'
+
+        ВеличинаСреднемесячногоДоходаЗаемщика:
+          type: number
+          format: double
+          maxLength: 15
+          minimum: 0.01
+          example: 10000.01
+          description: Сумма среднемесячных доходов заёмщика
+
+
+
     ПараметрыРасчетаПДНЗаявка: #$ref: '#/components/schemas/ПараметрыРасчетаПДНЗаявка'
       type: object
       properties:
-
-     
 
         ДатаРасчета:             
           example: '2025-01-02T00:00:00'
@@ -51879,6 +52389,13 @@ components:
           minimum: 0.01
           example: 10000.01
           description: Среднедушевой доход по региону
+        СуммаСреднемесячныхПлатежейПоВсемПотребительскимКредитам:
+          type: number
+          format: double
+          maxLength: 15
+          minimum: 0.01
+          example: 10000.01
+          description: Среднемесячные платежи по всем потребительским кредитам
 
 
         ВеличинаСреднемесячногоДоходаЗаемщика:
