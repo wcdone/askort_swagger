@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: 'Программный интерфейс (API) для интеграции с 1С:Управление МФО и КПК'
-  description: 'Список методов API для интеграции с 1С:Управление МФО и КПК в нотации Swagger 2.1.0.67.1'
+  description: 'Список методов API для интеграции с 1С:Управление МФО и КПК в нотации Swagger 2.1.0.69.1'
   version: '2.0'
 servers:
   # Added by API Auto Mocking Plugin
@@ -26645,7 +26645,7 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
-
+#bid_loan_update
 
   '/loan_based_bid_create/v1.0/{node}':
     post:
@@ -30188,6 +30188,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+
+#'/credit_limit_update/v1.0/{node}':
 
 #ок
   '/loan_tranche_create/v1.0/{node}':
