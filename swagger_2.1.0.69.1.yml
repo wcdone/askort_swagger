@@ -26834,6 +26834,17 @@ paths:
                   description: >-
                     Дата окончания займа. Если тег не заполнен, то посчитается
                     на основе ДатаВыдачи и СрокЗайма
+                Рефинансирован:
+                  type: boolean
+                  description: >-
+                    true - если займ выдается на рефинансирование другого
+                    займа
+                  example: false
+                  default: false
+                ЗаймДоРефинансирования:
+                  $ref: '#/components/schemas/Займ'
+                  description: >-
+                    Уникальный идентификатор займа, который рефинансируется
                 СрокЗайма:
                   type: number
                   format: integer
@@ -27005,6 +27016,18 @@ paths:
                       $ref: '#/components/schemas/Контрагент' 
                     Менеджер:
                       $ref: '#/components/schemas/Контрагент'
+
+                    Рефинансирован:
+                      type: boolean
+                      description: >-
+                        true - если займ выдается на рефинансирование другого
+                        займа
+                      example: false
+                      default: false
+                    ЗаймДоРефинансирования:
+                      $ref: '#/components/schemas/Займ'
+                      description: >-
+                        Уникальный идентификатор займа, который рефинансируется
 
                     ДоговорПодписан:
                       type: boolean
@@ -30302,7 +30325,7 @@ paths:
   '/credit_limit_update/v1.0/{node}':
     post:
       tags:
-        - Прочие операции по займам предоставленным 
+        - Кредитный лимит
       summary: Обновить кредитный лимит 
       description: >-
         Метод позволяет обновить только переданные данные в документе кредитного лимита. 
@@ -36189,10 +36212,21 @@ paths:
                   description: >-
                     необязательный признак может принимать значения true|false, по умолчанию false, при установке в значение true, в договоре займа устанавливается флаг Договор подписан
                   example: false
-                
                 Реквизиты:
                   type: object
                   properties:
+                    Рефинансирован:
+                      type: boolean
+                      description: >-
+                        true - если займ выдается на рефинансирование другого
+                        займа
+                      example: false
+                      default: false
+                    ЗаймДоРефинансирования:
+                      $ref: '#/components/schemas/Займ'
+                      description: >-
+                        Уникальный идентификатор займа, который рефинансируется
+                        
                     ОбеспеченныйЗаймЗалоги:
                       example: false
                       type: boolean
@@ -37181,6 +37215,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+
+
 
 
   '/dossier_contractor_create/v1.0/{node}':
