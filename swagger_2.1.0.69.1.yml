@@ -31262,6 +31262,8 @@ paths:
                         $ref: '#/components/schemas/Контрагент' 
                       Займ:
                         $ref: '#/components/schemas/Займ'
+                      Транш:
+                        $ref: '#/components/schemas/Транш'
                       СуммаПлатежа:
                         type: number
                         format: double
@@ -31413,6 +31415,8 @@ paths:
                   $ref: '#/components/schemas/Контрагент' 
                 Займ:
                   $ref: '#/components/schemas/Займ'
+                Транш:
+                  $ref: '#/components/schemas/Транш'
                 СуммаПлатежа:
                   type: number
                   format: double
@@ -31593,6 +31597,9 @@ paths:
                           $ref: '#/components/schemas/Контрагент' 
                       Займ:
                         $ref: '#/components/schemas/Займ'
+                      Транш:
+                        $ref: '#/components/schemas/Транш'
+                        
                       СуммаПриход:
                         type: number
                         format: double
@@ -31625,6 +31632,8 @@ paths:
                           $ref: '#/components/schemas/Контрагент' 
                       Займ:
                         $ref: '#/components/schemas/Займ'
+                      Транш:
+                        $ref: '#/components/schemas/Транш'
                       ВидНачисления:
                         $ref: '#/components/schemas/ВидНачисления' 
                       ДатаПлатежа:
@@ -31767,6 +31776,8 @@ paths:
                           $ref: '#/components/schemas/Контрагент' 
                       Займ:
                         $ref: '#/components/schemas/Займ'
+                      Транш:
+                        $ref: '#/components/schemas/Транш'
                       ВидНачисления:
                         $ref: '#/components/schemas/ВидНачисления' 
                       
@@ -33436,6 +33447,16 @@ paths:
                           $ref: '#/components/schemas/Контрагент' 
                       Займ:
                         $ref: '#/components/schemas/Займ'
+                      Транш:
+                        $ref: '#/components/schemas/Транш'
+                      ЗакрытьТранш:
+                        type: boolean
+                        description: >-
+                          true - в результате погашения транш будет закрыт. Реквизит определяет необходимость
+                          списания остатков по всем счетам, связанным с
+                          закрываемым траншом, без контроля остатков. По умолчанию - ложь
+                        example: false
+                        default: false
                       СуммаПлатежа:
                         type: number
                         format: double
@@ -34093,6 +34114,8 @@ paths:
                         $ref: '#/components/schemas/Контрагент' 
                       Займ:
                         $ref: '#/components/schemas/Займ'
+                      Транш:
+                        $ref: '#/components/schemas/Транш'
 
                       ЗадолженностьОсновнойДолг:
                         type: number
@@ -36989,6 +37012,8 @@ paths:
                         type: string
                         description: Идентификатор займа
                         example: '19ba-11ed-bd75-0242ac120002ЗЗайм'
+                      Транш:
+                        $ref: '#/components/schemas/Транш'
                       Сумма:
                         type: number
                         description: Сумма продажи
@@ -51846,6 +51871,11 @@ components:
       maxLength: 100
       example: 8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd
       description: Публичный идентификатор Займа     
+    Транш:         # $ref: '#/components/schemas/Транш'     
+      type: string
+      maxLength: 100
+      example: 8d7850b3-8bc9-11e7-86a2-1c1b0de4e1bd
+      description: Публичный идентификатор транша    
     КредитныйЛимит:         # $ref: '#/components/schemas/КредитныйЛимит'     
       type: string
       maxLength: 100
