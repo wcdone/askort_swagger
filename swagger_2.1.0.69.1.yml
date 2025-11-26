@@ -27289,6 +27289,8 @@ paths:
                       description: Флаг подписания обеспеченный займ
                       example: false
                       default: false
+                    Режим:
+                      $ref: '#/components/schemas/РежимЗакрытияЗайма'
 
                     ПричинаЗакрытия:
                       $ref: '#/components/schemas/ПричинаЗакрытия' 
@@ -37489,7 +37491,6 @@ paths:
                       Контрагент:
                         $ref: '#/components/schemas/Контрагент'
                         description: Обязательно, если ПоСпискуКонтрагентов = Истина. Идентификатор контрагента. Не используется при ПоСпискуКонтрагентов = Ложь.
-                        
 
                       Изменять:
                         type: boolean
@@ -52104,7 +52105,13 @@ components:
         - ПроцентыНачисленныеДоЛьготногоПериода
         - ОтложенныеПроцентыПослеЛьготногоПериода
       example: НачислениеПроцентовНаПросроченнуюЗадолженность
-    
+    РежимЗакрытияЗайма: # $ref: '#/components/schemas/РежимЗакрытияЗайма'
+      type: string
+      description: Режим закрытия
+      enum:
+        - ЗакрытиеДоговора
+        - ОтменаДоговора
+      example: "АвтоматическиПриПолномПогашении"
     ПричинаЗакрытия: # $ref: '#/components/schemas/ПричинаЗакрытия'
       type: string
       maxLength: 100
@@ -53070,6 +53077,10 @@ components:
         type: object
         properties:
           ДействуетС:
+            example: '1899-12-31T00:00:00'
+            type: string
+            format: data-time
+          ДатаДокумента:
             example: '1899-12-31T00:00:00'
             type: string
             format: data-time
