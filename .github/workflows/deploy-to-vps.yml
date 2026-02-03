@@ -21,7 +21,7 @@ jobs:
       run: |
         echo "SSH key starts with: ${SSH_PRIVATE_KEY:0:30}"
         echo "SSH key length: ${#SSH_PRIVATE_KEY}"
-        
+
     - name: Build and deploy
       uses: appleboy/ssh-action@v0.1.10
       env:
@@ -41,9 +41,10 @@ jobs:
           cp $(ls swagger_*.yml | sort -V | tail -n 1) swagger.yml
           cd /opt/swagger-ui/
           chmod -R 644 ./api-specs/ && chmod 755 ./api-specs/
-          
+          - name: docker compose down
+          cd /opt/swagger-ui/ && docker compose down
+
+          cd /opt/swagger-ui/ && docker compose up -d
           # Deploy with version tag
-          docker compose up -d --force-recreate
-          
           # Log deployment
           echo "Deployed version $SCHEMA_VERSION at $(date)" >> /var/log/swagger-deploy.log
