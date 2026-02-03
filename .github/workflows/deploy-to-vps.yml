@@ -10,7 +10,18 @@ jobs:
     environment: api.audit-escort.ru
     steps:
     - uses: actions/checkout@v4
+        
+    - name: Debug SSH connection
+      run: |
+        echo "Testing SSH connection..."
+        # Проверка доступности хоста
+        nc -zv ${{ secrets.VPS_HOST }} 22 || echo "Port 22 not accessible"
     
+    - name: Show SSH key info (безопасно)
+      run: |
+        echo "SSH key starts with: ${SSH_PRIVATE_KEY:0:30}"
+        echo "SSH key length: ${#SSH_PRIVATE_KEY}"
+        
     - name: Build and deploy
       uses: appleboy/ssh-action@v0.1.10
       env:
