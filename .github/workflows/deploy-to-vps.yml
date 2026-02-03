@@ -1,0 +1,36 @@
+name: Deploy via Docker
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build and deploy
+      uses: appleboy/ssh-action@v0.1.10
+      env:
+        SCHEMA_VERSION: ${{ github.sha }}
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        envs: SCHEMA_VERSION
+        script: |
+          # Pull latest changes
+          cd /opt/swagger-ui/api-specs
+          sudo -u swagger-user git pull origin main
+          
+          # Update schema
+          cp $(ls swagger_*.yml | sort -V | tail -n 1) swagger.yaml
+          cd /opt/swagger-ui/
+          chmod -R 644 ./api-specs/ && chmod 755 ./api-specs/
+          
+          # Deploy with version tag
+          docker compose up -d --force-recreate
+          
+          # Log deployment
+          echo "Deployed version $SCHEMA_VERSION at $(date)" >> /var/log/swagger-deploy.log
