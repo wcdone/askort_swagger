@@ -25,7 +25,8 @@ jobs:
           sudo -u swagger-user git pull origin main
           
           # Update schema
-          cp $(ls swagger_*.yml | sort -V | tail -n 1) swagger.yaml
+          ls swagger_*.yml | sort -V | tail -n 1
+          cp $(ls swagger_*.yml | sort -V | tail -n 1) swagger.yml
           cd /opt/swagger-ui/
           chmod -R 644 ./api-specs/ && chmod 755 ./api-specs/
           
