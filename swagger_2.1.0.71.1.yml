@@ -17,11 +17,11 @@ tags:
   #- name: Сбережения
   - name: Взаиморасчеты по займам предоставленным
   - name: Прочие операции по займам предоставленным
+  - name: Приобретенные займы
   - name: Займы сбережения
   - name: КПК
   - name: Хозяйственная деятельность
   - name: Служебные методы
-  - name: Приобретенные займы
 paths:
 
 
@@ -38067,199 +38067,6 @@ paths:
                       Идентификатор: dff3a061-7e7e-11ec-8dcb-50e549b16b6b7
                       Статус: 1
 
-  '/cession_loan_purchase_create/v1.0/{node}':
-    post:
-      tags:
-        - Приобретенные займы
-      summary: Создать приобретение прав требований по займам
-      description: >-
-        Метод предназначен для отражения факта о приобретении прав требований займа предоставленного.Важно: для работы с покупными займами в 1С:УМФО и КПК необходимо приобрести доп. сервис «Учёт приобретенных прав требований по договорам займа».
-
-      parameters:
-        - $ref: '#/components/parameters/node'
-        - $ref: '#/components/parameters/extended_response_mode'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ВнешниеДанные:
-                  $ref: '#/components/schemas/external_data'
-                Идентификатор:
-                  $ref: '#/components/schemas/Идентификатор'
-                Реквизиты:
-                  type: object
-                  properties:    
-                    Организация:
-                      $ref: '#/components/schemas/Организация' 
-                    ПодразделениеОрганизации:
-                      $ref: '#/components/schemas/ПодразделениеОрганизации'
-                    Контрагент:
-                      $ref: '#/components/schemas/Контрагент' 
-                      description: Публичный идентификатор контрагента у которого купили цессию
-                    Дата:
-                      example: '2023-04-04T09:15:28'
-                      type: string
-                      format: data-time
-                      description: Дата документа приобретения прав требований
-                    ДоговорКонтрагента:
-                     $ref: '#/components/schemas/Идентификатор' 
-                     description: Публичный идентификатор договора с контрагентом
-                    ВариантРасчетаПокупнойСтоимости:
-                      type: string
-                      description: перечисление АЭ_ВариантыРасчетаПокупнойСтоимостиПриобретенныхЗаймов, доступные значения (ФиксированныеСуммыПоВидамПлатежа | ФиксированнаяСумма )
-                      enum:
-                        - ФиксированныеСуммыПоВидамПлатежа
-                        - ФиксированнаяСумма
-                      example: ФиксированныеСуммыПоВидамПлатежа
-                    Комментарий:
-                      $ref: '#/components/schemas/Комментарий'
-                    РежимИнтеграции:
-                      type: boolean
-                      description: >-
-                            true - Устанавливается призак РежимИнтеграции
-                      example: false
-                    ВводОстатков:
-                      type: boolean
-                      description: >-
-                            true - Устанавливается призак ввода остатков
-                      example: false
-                  required:
-                    - Организация
-                    
-                    - Дата
-                    
-                    
-                Займы:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      Контрагент:
-                        $ref: '#/components/schemas/Контрагент' 
-                        description: Публичный идентификатор поручителя
-                      Займ:
-                        $ref: '#/components/schemas/Займ'
-                        description: Публичный идентификатор
-                      СуммаПокупки:
-                        type: number
-                        format: double
-                        maxLength: 15
-                        minimum: 0.01
-                        example: 10000
-                        description: Сумма покупки займа                    
-                      СуммаПокупкиОсновнойДолг:
-                        type: number
-                        format: double
-                        maxLength: 15
-                        minimum: 0.01
-                        example: 10000
-                        description: Сумма покупки ОД
-                      СуммаПокупкиПроценты:
-                        type: number
-                        format: double
-                        maxLength: 15
-                        minimum: 0.01
-                        example: 10000
-                        description: Сумма покупки проценты
-                      СуммаПокупкиКомиссии:
-                        type: number
-                        format: double
-                        maxLength: 15
-                        minimum: 0.01
-                        example: 10000
-                        description: Сумма покупки комиссии
-                      ДнейПросрочки:
-                        type: number
-                        format: integer
-                        maxLength: 10
-                        example: 10
-                        description: >-
-                          Колличество дней просрочки займа
-                    required:
-                      - Контрагент
-                      - Займ
-                      - СуммаПокупки
-                      - ДнейПросрочки
-
-                Начисления:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      Займ:
-                        $ref: '#/components/schemas/Займ'
-                        description: Публичный идентификатор
-                                      
-                      ВидНачисления:
-                        $ref: '#/components/schemas/ВидНачисления' 
-                      ДатаПлатежа:
-                        example: '2023-04-04T09:15:28'
-                        type: string
-                        format: data-time
-                        description: ДатаПлатежа
-                      ОтраженоВРегламентированномУчете:
-                        type: boolean
-                        description: >-
-                          В оперативном учете отражается всегда, true - если
-                          требуется отражение в бухгалтерском учете (проводки).
-                          По умолчанию false. Фактически true можно
-                          устанавливать только в случае судебного признания
-                          (согласно законодательству)
-                        example: false
-                        default: false
-
-#ОтраженоВРегламентированномУчете:
-                      Сумма:
-                        type: number
-                        format: double
-                        maxLength: 15
-                        minimum: 0.01
-                        example: 10000
-                        description: Сумма                  
-                    required:
-                      - Займ
-                      - ВидНачисления
-                      - Сумма
-
-
-
-
-              required:
-                - Идентификатор
-                - Займы
-                - Начисления
-                - Реквизиты
-
-      responses:
-        '200':
-          description: JSON формат
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/200'
-              example:
-                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
-                КодРезультата: 1
-                ОписаниеРезультата: Запрос успешно выполнен
-                ВнешниеДанные: null
-                КоличествоОбработанныхОбъектов: 1
-                Данные:
-                  ПриобретениеПравТребованийЗайма:
-                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
-                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
-                      Статус: 1
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-
-
-
 
   '/dossier_contractor_create/v1.0/{node}':
     post:
@@ -40449,6 +40256,435 @@ paths:
 
 
 #--- Прочие операции по займам предоставленным end
+
+
+  '/cession_loan_purchase_create/v1.0/{node}':
+    post:
+      tags:
+        - Приобретенные займы
+      summary: Создать приобретение прав требований по займам
+      description: >-
+        Метод предназначен для отражения факта о приобретении прав требований займа предоставленного.Важно: для работы с покупными займами в 1С:УМФО и КПК необходимо приобрести доп. сервис «Учёт приобретенных прав требований по договорам займа».
+
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                Реквизиты:
+                  type: object
+                  properties:    
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    ПодразделениеОрганизации:
+                      $ref: '#/components/schemas/ПодразделениеОрганизации'
+                    Контрагент:
+                      $ref: '#/components/schemas/Контрагент' 
+                      description: Публичный идентификатор контрагента у которого купили цессию
+                    Дата:
+                      example: '2023-04-04T09:15:28'
+                      type: string
+                      format: data-time
+                      description: Дата документа приобретения прав требований
+                    ДоговорКонтрагента:
+                     $ref: '#/components/schemas/Идентификатор' 
+                     description: Публичный идентификатор договора с контрагентом
+                    ВариантРасчетаПокупнойСтоимости:
+                      type: string
+                      description: перечисление АЭ_ВариантыРасчетаПокупнойСтоимостиПриобретенныхЗаймов, доступные значения (ФиксированныеСуммыПоВидамПлатежа | ФиксированнаяСумма )
+                      enum:
+                        - ФиксированныеСуммыПоВидамПлатежа
+                        - ФиксированнаяСумма
+                      example: ФиксированныеСуммыПоВидамПлатежа
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+                    РежимИнтеграции:
+                      type: boolean
+                      description: >-
+                            true - Устанавливается призак РежимИнтеграции
+                      example: false
+                    ВводОстатков:
+                      type: boolean
+                      description: >-
+                            true - Устанавливается призак ввода остатков
+                      example: false
+                  required:
+                    - Организация
+                    
+                    - Дата
+                    
+                    
+                Займы:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Контрагент:
+                        $ref: '#/components/schemas/Контрагент' 
+                        description: Публичный идентификатор поручителя
+                      Займ:
+                        $ref: '#/components/schemas/Займ'
+                        description: Публичный идентификатор
+                      СуммаПокупки:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма покупки займа                    
+                      СуммаПокупкиОсновнойДолг:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма покупки ОД
+                      СуммаПокупкиПроценты:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма покупки проценты
+                      СуммаПокупкиКомиссии:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма покупки комиссии
+                      ДнейПросрочки:
+                        type: number
+                        format: integer
+                        maxLength: 10
+                        example: 10
+                        description: >-
+                          Колличество дней просрочки займа
+                    required:
+                      - Контрагент
+                      - Займ
+                      - СуммаПокупки
+                      - ДнейПросрочки
+
+                Начисления:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Займ:
+                        $ref: '#/components/schemas/Займ'
+                        description: Публичный идентификатор
+                                      
+                      ВидНачисления:
+                        $ref: '#/components/schemas/ВидНачисления' 
+                      ДатаПлатежа:
+                        example: '2023-04-04T09:15:28'
+                        type: string
+                        format: data-time
+                        description: ДатаПлатежа
+                      ОтраженоВРегламентированномУчете:
+                        type: boolean
+                        description: >-
+                          В оперативном учете отражается всегда, true - если
+                          требуется отражение в бухгалтерском учете (проводки).
+                          По умолчанию false. Фактически true можно
+                          устанавливать только в случае судебного признания
+                          (согласно законодательству)
+                        example: false
+                        default: false
+
+#ОтраженоВРегламентированномУчете:
+                      Сумма:
+                        type: number
+                        format: double
+                        maxLength: 15
+                        minimum: 0.01
+                        example: 10000
+                        description: Сумма                  
+                    required:
+                      - Займ
+                      - ВидНачисления
+                      - Сумма
+
+
+
+
+              required:
+                - Идентификатор
+                - Займы
+                - Начисления
+                - Реквизиты
+
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  ПриобретениеПравТребованийЗайма:
+                    - Идентификатор: 39ecadb6-a922-11ed-8e46-b42e991713ac
+                      ИдентификаторВладельца: Т283e416-528c-11ec-8dcb-50e549b16c6c
+                      Статус: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+
+
+#--- БКИ start
+
+  '/bki_additional_event_structure_request/v1.0/{node}':
+    post:
+      tags:
+        - БКИ
+      summary: Запрос структуры дополнительных событий для выгрузки в БКИ
+      description: >-
+        Запрос структуры дополнительных событий для выгрузки в БКИ
+        состав данных иногда изменяется при изменении версии БКИ 
+        Метод для работы требуют расширения БКИ версии не ниже 3.0.167.32/1.5.7.1
+        и активного сервиса Помощник обмена с БКИ
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ВидСобытия
+              properties:
+                ВидСобытия:
+                  type: string
+                  description: Вид события для выгрузки в БКИ. перечисление АЭ_ВидыСобытийДляВыгрузкиВБКИ
+                  enum:
+                    - СведенияОСудебномСпоре
+                    - СведенияОСудебномСпореПоручительство
+                    - СведенияОВнесудебномБанкротствеФизическогоЛица
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ИдентификаторЗапроса:
+                    type: string
+                  КодРезультата:
+                    $ref: '#/components/schemas/КодРезультата'
+                  ОписаниеРезультата:
+                    $ref: '#/components/schemas/ОписаниеРезультата'
+                  КоличествоОбработанныхОбъектов:
+                    type: integer
+                  Данные:
+                    type: array
+                    items:
+                      type: object
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  СудебныйАкт:
+                    - Контрагент: 00325e92-51c4-4da9-9d80-d36ce6c8e4a0
+                      Займ: bca64ac5-e5b4-4fa4-bea2-ef061fb9447d
+                      ДатаСобытия: '2000-01-01'
+                      ПризнакСудебногоСпораИлиТребования: false
+                      ПризнакНаличияСудебногоАкта: false
+                      ДатаПринятияСудебногоАкта: '2000-01-01'
+                      НомерСудебногоАкта: string
+                      ПризнакВступленияАктаВЗаконнуюСилу: false
+                      РезолютивнаяЧастьСудебногоАкта6551: 1
+                      КодИскаИлиТребования: 1
+                      СуммаТребованийПодлежащихУдовлетворению: 1
+                      ДополнительныеСведенияПоСудебномуАкту: string
+                      РезолютивнаяЧастьСудебногоАкта: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+  '/bki_additional_event_create/v1.0/{node}':
+    post:
+      tags:
+        - БКИ
+      summary: Создать документ регистрация доп событий в БКИ 
+      description: >-
+        Создать документ Регистрация доп событий в БКИ (АЭ_РегистрацияДополнительныхСобытийДляПередачиВБКИ) 
+        данные в нём хранятся в произвольной форме, состав данных иногда изменяется при изменении версии БКИ 
+        Метод для работы требуют расширения БКИ версии не ниже 3.0.167.32/1.5.7.1
+        и активного сервиса Помощник обмена с БКИ
+      parameters:
+        - $ref: '#/components/parameters/node'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - Идентификатор
+                - Реквизиты
+                - ДанныеСобытий
+              properties:
+                Идентификатор:
+                  type: string
+                  description: Уникальный идентификатор события
+                Реквизиты:
+                  type: object
+                  required:
+                    - Организация
+                    - Дата
+                    - ВидСобытия
+                  properties:
+                    Организация:
+                      $ref: '#/components/schemas/Организация' 
+                    Дата:
+                      type: string
+                      format: date-time
+                      example: "2021-08-07T09:15:28.032+00:00" 
+                      description: Дата события
+                    ВидСобытия:
+                      type: string
+                      description: Вид события для выгрузки в БКИ. перечисление АЭ_ВидыСобытийДляВыгрузкиВБКИ
+                      enum:
+                        - СведенияОСудебномСпоре
+                        - СведенияОСудебномСпореПоручительство
+                        - СведенияОВнесудебномБанкротствеФизическогоЛица
+                      example: СведенияОСудебномСпоре
+
+                    Комментарий:
+                      $ref: '#/components/schemas/Комментарий'
+
+                      
+                ДанныеСобытий:
+                  type: object
+                  properties:
+                    СудебныйАкт:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          Контрагент:  
+                            $ref: '#/components/schemas/Контрагент'
+                            description: Идентификатор контрагента
+                          Займ:
+                            $ref: '#/components/schemas/Займ'
+                            description: Идентификатор займа
+                          ДатаСобытия:
+                            example: '2024-01-01T00:00:00'
+                            type: string
+                            format: data-time
+                          
+                            description: Дата события
+                          ПризнакСудебногоСпораИлиТребования:
+                            type: boolean
+                            example: false
+                            description: Признак судебного спора или требования
+                          ПризнакНаличияСудебногоАкта:
+                            type: boolean
+                            example: false
+                            description: Признак наличия судебного акта
+                          ДатаПринятияСудебногоАкта:
+                            type: string
+                            example: '2024-01-01T00:00:00'
+                            format: date
+                            description: Дата принятия судебного акта
+                          НомерСудебногоАкта:
+                            type: string
+                            example: "123"
+                            description: Номер судебного акта
+                          ПризнакВступленияАктаВЗаконнуюСилу:
+                            type: boolean
+                            example: false
+                            description: Признак вступления акта в законную силу
+                          РезолютивнаяЧастьСудебногоАкта6551:
+                            type: integer
+                            example: 1
+                            description: Числовое значение резолютивной части судебного акта
+                          КодИскаИлиТребования:
+                            type: integer
+                            example: 1
+                            description: Код иска или требования
+                          СуммаТребованийПодлежащихУдовлетворению:
+                            type: number
+                            format: float
+                            example: "123.10"
+                            description: Сумма требований, подлежащих удовлетворению
+                          ДополнительныеСведенияПоСудебномуАкту:
+                            type: string
+                            example: "string"
+                            description: Дополнительные сведения по судебному акту
+                          РезолютивнаяЧастьСудебногоАкта:
+                            type: string
+                            example: "string"
+                            description: Текст резолютивной части судебного акта
+
+
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  СудебныйАкт:
+                    - Контрагент: 00325e92-51c4-4da9-9d80-d36ce6c8e4a0
+                      Займ: bca64ac5-e5b4-4fa4-bea2-ef061fb9447d
+                      ДатаСобытия: '2000-01-01'
+                      ПризнакСудебногоСпораИлиТребования: false
+                      ПризнакНаличияСудебногоАкта: false
+                      ДатаПринятияСудебногоАкта: '2000-01-01'
+                      НомерСудебногоАкта: string
+                      ПризнакВступленияАктаВЗаконнуюСилу: false
+                      РезолютивнаяЧастьСудебногоАкта6551: 1
+                      КодИскаИлиТребования: 1
+                      СуммаТребованийПодлежащихУдовлетворению: 1
+                      ДополнительныеСведенияПоСудебномуАкту: string
+                      РезолютивнаяЧастьСудебногоАкта: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
+#--- БКИ end
+
+
+
 
 
 
@@ -50716,241 +50952,6 @@ paths:
 
 
 #--- Хозяйственная деятельность end
-
-
-#--- БКИ start
-
-  '/bki_additional_event_structure_request/v1.0/{node}':
-    post:
-      tags:
-        - БКИ
-      summary: Запрос структуры дополнительных событий для выгрузки в БКИ
-      description: >-
-        Запрос структуры дополнительных событий для выгрузки в БКИ
-        состав данных иногда изменяется при изменении версии БКИ 
-        Метод для работы требуют расширения БКИ версии не ниже 3.0.167.32/1.5.7.1
-        и активного сервиса Помощник обмена с БКИ
-      parameters:
-        - $ref: '#/components/parameters/node'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - ВидСобытия
-              properties:
-                ВидСобытия:
-                  type: string
-                  description: Вид события для выгрузки в БКИ. перечисление АЭ_ВидыСобытийДляВыгрузкиВБКИ
-                  enum:
-                    - СведенияОСудебномСпоре
-                    - СведенияОСудебномСпореПоручительство
-                    - СведенияОВнесудебномБанкротствеФизическогоЛица
-      responses:
-        '200':
-          description: JSON формат
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  ИдентификаторЗапроса:
-                    type: string
-                  КодРезультата:
-                    $ref: '#/components/schemas/КодРезультата'
-                  ОписаниеРезультата:
-                    $ref: '#/components/schemas/ОписаниеРезультата'
-                  КоличествоОбработанныхОбъектов:
-                    type: integer
-                  Данные:
-                    type: array
-                    items:
-                      type: object
-              example:
-                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
-                КодРезультата: 1
-                ОписаниеРезультата: Запрос успешно выполнен
-                ВнешниеДанные: null
-                КоличествоОбработанныхОбъектов: 1
-                Данные:
-                  СудебныйАкт:
-                    - Контрагент: 00325e92-51c4-4da9-9d80-d36ce6c8e4a0
-                      Займ: bca64ac5-e5b4-4fa4-bea2-ef061fb9447d
-                      ДатаСобытия: '2000-01-01'
-                      ПризнакСудебногоСпораИлиТребования: false
-                      ПризнакНаличияСудебногоАкта: false
-                      ДатаПринятияСудебногоАкта: '2000-01-01'
-                      НомерСудебногоАкта: string
-                      ПризнакВступленияАктаВЗаконнуюСилу: false
-                      РезолютивнаяЧастьСудебногоАкта6551: 1
-                      КодИскаИлиТребования: 1
-                      СуммаТребованийПодлежащихУдовлетворению: 1
-                      ДополнительныеСведенияПоСудебномуАкту: string
-                      РезолютивнаяЧастьСудебногоАкта: string
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-
-  '/bki_additional_event_create/v1.0/{node}':
-    post:
-      tags:
-        - БКИ
-      summary: Создать документ регистрация доп событий в БКИ 
-      description: >-
-        Создать документ Регистрация доп событий в БКИ (АЭ_РегистрацияДополнительныхСобытийДляПередачиВБКИ) 
-        данные в нём хранятся в произвольной форме, состав данных иногда изменяется при изменении версии БКИ 
-        Метод для работы требуют расширения БКИ версии не ниже 3.0.167.32/1.5.7.1
-        и активного сервиса Помощник обмена с БКИ
-      parameters:
-        - $ref: '#/components/parameters/node'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - Идентификатор
-                - Реквизиты
-                - ДанныеСобытий
-              properties:
-                Идентификатор:
-                  type: string
-                  description: Уникальный идентификатор события
-                Реквизиты:
-                  type: object
-                  required:
-                    - Организация
-                    - Дата
-                    - ВидСобытия
-                  properties:
-                    Организация:
-                      $ref: '#/components/schemas/Организация' 
-                    Дата:
-                      type: string
-                      format: date-time
-                      example: "2021-08-07T09:15:28.032+00:00" 
-                      description: Дата события
-                    ВидСобытия:
-                      type: string
-                      description: Вид события для выгрузки в БКИ. перечисление АЭ_ВидыСобытийДляВыгрузкиВБКИ
-                      enum:
-                        - СведенияОСудебномСпоре
-                        - СведенияОСудебномСпореПоручительство
-                        - СведенияОВнесудебномБанкротствеФизическогоЛица
-                      example: СведенияОСудебномСпоре
-
-                    Комментарий:
-                      $ref: '#/components/schemas/Комментарий'
-
-                      
-                ДанныеСобытий:
-                  type: object
-                  properties:
-                    СудебныйАкт:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          Контрагент:  
-                            $ref: '#/components/schemas/Контрагент'
-                            description: Идентификатор контрагента
-                          Займ:
-                            $ref: '#/components/schemas/Займ'
-                            description: Идентификатор займа
-                          ДатаСобытия:
-                            example: '2024-01-01T00:00:00'
-                            type: string
-                            format: data-time
-                          
-                            description: Дата события
-                          ПризнакСудебногоСпораИлиТребования:
-                            type: boolean
-                            example: false
-                            description: Признак судебного спора или требования
-                          ПризнакНаличияСудебногоАкта:
-                            type: boolean
-                            example: false
-                            description: Признак наличия судебного акта
-                          ДатаПринятияСудебногоАкта:
-                            type: string
-                            example: '2024-01-01T00:00:00'
-                            format: date
-                            description: Дата принятия судебного акта
-                          НомерСудебногоАкта:
-                            type: string
-                            example: "123"
-                            description: Номер судебного акта
-                          ПризнакВступленияАктаВЗаконнуюСилу:
-                            type: boolean
-                            example: false
-                            description: Признак вступления акта в законную силу
-                          РезолютивнаяЧастьСудебногоАкта6551:
-                            type: integer
-                            example: 1
-                            description: Числовое значение резолютивной части судебного акта
-                          КодИскаИлиТребования:
-                            type: integer
-                            example: 1
-                            description: Код иска или требования
-                          СуммаТребованийПодлежащихУдовлетворению:
-                            type: number
-                            format: float
-                            example: "123.10"
-                            description: Сумма требований, подлежащих удовлетворению
-                          ДополнительныеСведенияПоСудебномуАкту:
-                            type: string
-                            example: "string"
-                            description: Дополнительные сведения по судебному акту
-                          РезолютивнаяЧастьСудебногоАкта:
-                            type: string
-                            example: "string"
-                            description: Текст резолютивной части судебного акта
-
-
-      responses:
-        '200':
-          description: JSON формат
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/200'
-              example:
-                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
-                КодРезультата: 1
-                ОписаниеРезультата: Запрос успешно выполнен
-                ВнешниеДанные: null
-                КоличествоОбработанныхОбъектов: 1
-                Данные:
-                  СудебныйАкт:
-                    - Контрагент: 00325e92-51c4-4da9-9d80-d36ce6c8e4a0
-                      Займ: bca64ac5-e5b4-4fa4-bea2-ef061fb9447d
-                      ДатаСобытия: '2000-01-01'
-                      ПризнакСудебногоСпораИлиТребования: false
-                      ПризнакНаличияСудебногоАкта: false
-                      ДатаПринятияСудебногоАкта: '2000-01-01'
-                      НомерСудебногоАкта: string
-                      ПризнакВступленияАктаВЗаконнуюСилу: false
-                      РезолютивнаяЧастьСудебногоАкта6551: 1
-                      КодИскаИлиТребования: 1
-                      СуммаТребованийПодлежащихУдовлетворению: 1
-                      ДополнительныеСведенияПоСудебномуАкту: string
-                      РезолютивнаяЧастьСудебногоАкта: string
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-
-#--- БКИ end
-
-
 
 
 
