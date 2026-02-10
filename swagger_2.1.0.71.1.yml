@@ -4,23 +4,7 @@ info:
   description: 'Список методов API для интеграции с 1С:Управление МФО и КПК в нотации Swagger 2.1.0.71.1'
   version: '2.0'
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/audit-escort/umfo_api/2.0
-  - url: 'http://umfo.audit-escort.ru:8890/swager2.0/hs/nfoapi'
-    description: >
-      Структура URI: {scheme}/{hostname:port}/{base-name}/hs/nfoapi/{method-name}{method-version}{node}?query-parameters
-      Где scheme - http или https
-      hostname - адрес хоста
-      port - порт на хосте
-      base-name - имя базы 1С
-      method-name - имя метода из списка методов ниже
-      method-version - доступная версия метода
-      node - код внешней системы от которой происходит запрос (регистрируется в базе 1С при настройке, см. документацию по настройке API)
-      query-parameters - параметры запроса если используются
-     # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/audit-escort/Akort_UMFO_api/2.0
+
 security:
   - basicAuth:
       - api
