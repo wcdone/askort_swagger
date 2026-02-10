@@ -34339,7 +34339,7 @@ paths:
                       $ref: '#/components/schemas/Комментарий'
                 Начисления:
                   type: array
-                  description: Профиль распределения (опционально)
+                  description: Табличная часть Начисления
                   items:
                     type: object
                     required:
@@ -34362,7 +34362,6 @@ paths:
                   type: array
                   description: >
                     Используется для вида операции "СторнироватьНачисленияПоПрофилюРаспределения"
-                    или для явного указания начислений при "СторнироватьУказанныеНачисления".
                   items:
                     type: object
                     required:
