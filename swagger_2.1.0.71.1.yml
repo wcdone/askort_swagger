@@ -1263,6 +1263,585 @@ paths:
         '404':
           description: URL не найден
 
+  '/contractor_update/v1.0/{node}':
+    post:
+      tags:
+        - Контрагенты
+      summary: Обновить контрагента
+      description: >-
+        Метод позволяет обновить данные контрагента только по переданным полям. синтаксис метода аналогичен запросам на создания контрагентов(ВНИМАНИЕ: поддерживает все поля из всех методов, для обновления нужного типа контрагента нужно использовать корректные поля)
+        
+        ФЛ - contractor_create_private_customer
+        
+        ИП - contractor_create_individual_entrepreneur
+        
+        ЮЛ - contractor_create_legal_entity
+
+        За исключением параметров:
+        
+        Идентификатор - Строка -Обязательно - Идентификатор контрагента для обновления.
+        
+        ЮридическоеФизическоеЛицо - Строка – Тип обновляемого контрагента-по умолчанию ФЛ. Варианты: "ФЛ", "ЮЛ", "ИП". В разделе "Реквизиты".
+        
+        ПерезаписатьСведенияОДокументах - булево - не обязательно, по умолчанию ЛОЖЬ. Если установить в Истина, то все документы будут стерты из регистра(документы физических лиц), после чего добавлены из массива "Документы". Иначе если передать ЛОЖЬ (оставить по умолчанию), то найденные в бд документы по ВидДокумента и ДатаВыдачи будут перезаписаны, остальное добавлены к существующим.
+
+      parameters:
+        - $ref: '#/components/parameters/node'
+        - $ref: '#/components/parameters/extended_response_mode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ВнешниеДанные:
+                  $ref: '#/components/schemas/external_data'
+                Идентификатор:
+                  $ref: '#/components/schemas/Идентификатор'
+                  description:
+                ПерезаписатьСведенияОДокументах:
+                  type: boolean
+                  description: >-
+                    Если установить в Истина (по умолчанию false), то все документы будут стерты из регистра(документы физических лиц), после чего добавлены из массива "Документы". Иначе если передать ЛОЖЬ (оставить по умолчанию), то найденные в бд документы по ВидДокумента и ДатаВыдачи будут перезаписаны, остальное добавлены к существующим. 
+                  example: false 
+                  default: false 
+
+                Реквизиты:
+                  type: object
+                  required:
+                    - ЮридическоеФизическоеЛицо
+                  properties:
+                    ЮридическоеФизическоеЛицо:
+                      type: string
+                      description: Тип обновляемого контрагента-по умолчанию ФЛ
+                      default: ФЛ
+                      example: ФЛ
+                      enum:
+                        - ФЛ
+                        - ЮЛ
+                        - ИП
+
+                    Гражданство:
+                       $ref: '#/components/schemas/СтраныМира'
+                    Фамилия:
+                      example: Иванов
+                      type: string
+                      maxLength: 50
+                    Имя:
+                      example: Иван
+                      type: string
+                      maxLength: 50
+                    Отчество:
+                      example: Иванович
+                      type: string
+                      maxLength: 50
+                    ДатаРождения:
+                      example: '1965-01-01T00:00:00'
+                      type: string
+                      format: date-time
+                    ДатаРегистрацииПоАдресуПрописки:
+                      example: '1965-01-01T00:00:00'
+                      type: string
+                      format: date-time
+                      description: Записывается в реквизит "ДатаРегистрации" в спр. ФизическиеЛица.
+                    МестоРождения:
+                      example: '0,Город,Район,Область,Страна'
+                      type: string
+                      maxLength: 240
+                    Пол:
+                      $ref: '#/components/schemas/Пол'
+                    ИНН:
+                      example: '123456789012'
+                      type: string
+                      maxLength: 50
+                   
+                    СтранаРождения:
+                      $ref: '#/components/schemas/СтраныМира'
+                    ОрганРегистрацииДляАдресаПрописки:
+                      $ref: '#/components/schemas/ОрганРегистрацииДляАдресаПрописки' 
+                   
+                    СтраховойНомерПФР:
+                      example: '123457'
+                      type: string
+                      maxLength: 14
+                    Занятость:
+                      $ref: '#/components/schemas/Идентификатор'
+                      example: ИдентификаторВидаЗанятости
+                    МестоРаботы:
+                      type: string
+                      maxLength: 100
+                      example: ООО АУДИТ-ЭСКОРТ
+                      description: Наименование работодателя
+                    Должность:
+                      example: ИдентификаторДолжности
+                      description: Публичный идентификатор
+                      $ref: '#/components/schemas/Идентификатор' 
+                    Самозанятый:
+                      type: boolean
+                      description: 'Если самозанятый, то истина'
+                      example: false
+                    АдресПроживанияСовпадаетСАдресомРегистрации:
+                      type: boolean
+                      description: >-
+                        Если истина, то на основе адреса в видом
+                        АдресРегистрации, будет автоматически создан адрес с
+                        видом АдресМестаПроживания
+                      example: false  
+                    ДатаРегистрации:
+                      example: '1965-01-01T00:00:00'
+                      type: string
+                      format: date-time
+                      description: Дата регистрации физического лица в качестве ИП записывает дату, помимо реквизита "ДатаРегистрации", в реквизит "АЭ_ДатаРегистрации".
+
+                    СостояниеВБраке:
+                      example: ИдентификаторСостоянияВбраке
+                      $ref: '#/components/schemas/Идентификатор' 
+                    ОсновноеОбразование:
+                      $ref: '#/components/schemas/Идентификатор' 
+                      example: ИдентификаторОбразования
+                    ГруппаКонтрагента:
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор группы справочника Контрагенты
+                    ГруппаФизлица: 
+                      $ref: '#/components/schemas/Идентификатор'
+                      description: Публичный идентификатор группы справочника Физические лица
+
+
+                    ИННПроверенВФНС:
+                      type: boolean
+                      description: 'Если ИНН проверен в ФНС, то истина'
+                      example: false
+                    ОКАТО:
+                      example: '12345678901'
+                      type: string
+                      description: ОКАТО - заполняются реквизиты АЭ_ОКАТО.
+                    ОКТМО:
+                      example: '98765432101'
+                      type: string
+                      description: ОКТМО - заполняются реквизиты  АЭ_ОКТМО.
+
+                    КоличествоДетей:
+                      type: number
+                      format: integer
+                      maxLength: 2
+                      example: 2
+                      description: Количество детей
+                      
+                    КоличествоИждивенцев:
+                      type: number
+                      format: integer
+                      maxLength: 2
+                      example: 2
+                      description: Количество иждивенцев
+
+                    ВидДеятельности:
+                      $ref: '#/components/schemas/Идентификатор' 
+                      example: ИдентификаторВидаДеятельности
+                      
+                    СтажНаПоследнемМестеРаботы:
+                      example: ИдентификаторСтажа
+                      $ref: '#/components/schemas/Идентификатор' 
+                    ИсточникДополнительногоДохода:
+                      $ref: '#/components/schemas/Идентификатор' 
+                      
+
+
+                    СреднемесячныйДоход:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      example: 28000
+                      description: Среднемесячный доход
+                    СреднемесячныеОбязательства:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      example: 28000
+                      description: Среднемесячные Обязательства
+                    СреднемесячныйДополнительныйДоход:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      example: 8000
+                      description: СреднемесячныйДополнительныйДоход
+                    СреднемесячныйОбщийДоход:
+                      type: number
+                      format: double
+                      maxLength: 15
+                      example: 35000
+                      description: СреднемесячныйОбщийДоход  
+
+                    СвидетельствоДатаВыдачи:
+                      example: '2010-01-01T00:00'
+                      type: string
+                      format: date-time
+                    СвидетельствоСерияНомер:
+                      example: 1234
+                      type: string  
+                    КемВыданоСвидетельствоИП:
+                      example: КемВыданоСвидетельствоИП
+                      maxLength: 200
+                      type: string
+                    КодОКВЭД:
+                      type: string
+                      maxLength: 8
+                      example: 01.13.1
+                    НаименованиеОКВЭД:
+                      type: string
+                      maxLength: 254
+                      example: Выращивание винограда
+                    КодОКВЭД2:
+                      type: string
+                      maxLength: 8
+                      example: 05.01
+                    НаименованиеОКВЭД2:
+                      example: Рыболовство
+                      type: string
+                      maxLength: 254
+                    КодОКОПФ:
+                      type: string
+                      maxLength: 5
+                      example: 50102
+                    МестоРегистрации:
+                      example: МестоРегистрации
+                      type: string
+                      maxLength: 250
+                    РегистрационныйНомер:
+                      example: РегистрационныйНомер
+                      type: string
+                    НаименованиеРегистрирующегоОргана:
+                      type: string
+                      example: 'НаименованиеРегистрирующегоОргана'
+                      maxLength: 250
+                    КатегорияСубъектаМалогоИлиСреднегоПредпринимательства:
+                      $ref: '#/components/schemas/КатегорияСубъектаМалогоИлиСреднегоПредпринимательства' 
+                
+                    СубъектМСП:
+                      type: boolean
+                      example: true
+                    Комментарий:
+                      type: string
+                      example: Комментарий
+
+                    Наименование:
+                      example: ООО Ромашка
+                      type: string
+                      maxLength: 100
+                    НаименованиеПолное:
+                      example: Общество с ограниченной ответственностью Ромашка
+                      type: string
+                      maxLength: 250
+                    НаименованиеПолноеНаИностранномЯзыке:                      
+                      example: OOOO Romashka
+                      type: string
+                      maxLength: 100
+                    СтранаРегистрации:
+                       $ref: '#/components/schemas/СтраныМира'
+                    
+                    КПП:
+                      example: 123456789
+                      type: string
+                      maxLength: 9
+                    ВидГосударственногоОргана:
+                      $ref: '#/components/schemas/ВидГосударственногоОргана'
+
+                    КодГосударственногоОргана:
+                      type: string
+                      description: Заполняется если создаём юл с  видом гос орган
+                      example: 100
+
+        
+                    ГосударственныйОрган:
+                      type: boolean
+                      example: false
+                      description: Заполняется если создаём юл с  видом гос орган
+                    НаименованиеОКОПФ:
+                      type: string
+                      maxLength: 254
+                      example: Общества с ограниченной ответственностью
+                    КодПоОКПО:
+                      type: string
+                      example: 45374318
+                    НалоговыйНомер:
+                      type: string
+                      example: 123456                    
+
+                СубъектыМСП:
+                  $ref: '#/components/schemas/СубъектыМСП'
+
+
+                НазначениеПодотчетныхСредствДляОткрытияЛицевыхСчетов:
+                  type: object
+                  properties:
+                      НазначениеПодотчетныхСредств:
+                        $ref: '#/components/schemas/Идентификатор' 
+                        description: Публичный идентификатор назначения подотчетных средств
+                      Организация:
+                        $ref: '#/components/schemas/Организация'
+                      ДатаОткрытия:
+                        example: '2023-01-01'
+                        type: string
+                        format: date-time
+
+                КонтактнаяИнформацияТелефон:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Вид:
+                        $ref: '#/components/schemas/КонтактнаяИнформацияТелефон_вид'
+                      Значение:
+                        $ref: '#/components/schemas/Contacts_info_telefon_Value'
+                    required:
+                      - Вид
+                      - Значение
+                КонтактнаяИнформацияЭлектроннаяПочта:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Вид:
+                        type: string
+                        enum:
+                          - АдресЭлектроннойПочты
+                      Значение:
+                        $ref: '#/components/schemas/Contacts_info_address_email'
+                    required:
+                      - Вид
+                      - Значение
+                Документы:
+                  $ref: '#/components/schemas/Docuents_for_private_person'
+                КонтактнаяИнформацияАдресВСвободнойФорме:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Вид:
+                        $ref: '#/components/schemas/КонтактнаяИнформацияАдрес_Вид'
+                       
+                      ТипЖилья:
+                        type: string
+                        maxLength: 100
+                        example: Собственное
+                        description: Публичный идентификатор
+                      Значение:
+                        $ref: '#/components/schemas/Contacts_info_address_arbitrary'
+                    required:
+                      - Вид
+                      - Значение
+                КонтактнаяИнформацияАдрес:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Вид:
+                        $ref: '#/components/schemas/КонтактнаяИнформацияАдрес_Вид'
+                      ТипЖилья:
+                        type: string
+                        maxLength: 100
+                        example: Собственное
+                        description: Публичный идентификатор
+                      Значение:
+                        $ref: '#/components/schemas/Contacts_info_address'
+                    required:
+                      - Вид
+                      - Значение
+                КонтактнаяИнформацияАдресDaData:
+                  type: array
+                  description: Массив адреса СТРОГО в формате Dadata
+                  items:
+                    type: object
+                    properties:
+                      Вид:
+                        $ref: '#/components/schemas/КонтактнаяИнформацияАдрес_Вид'
+                      ТипЖилья:
+                        type: string
+                        maxLength: 100
+                        example: Собственное
+                        description: Публичный идентификатор
+                      ЗначениеDaData:
+                        $ref: '#/components/schemas/Contacts_info_address_DaData'
+                    required:
+                      - Вид
+                      - ЗначениеDaData
+                КонтактныеЛица:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Фамилия:
+                        example: Тестовый
+                        type: string
+                        maxLength: 50
+                      Имя:
+                        example: Владисдав
+                        type: string
+                        maxLength: 50
+                      Отчество:
+                        example: Тестович
+                        type: string
+                        maxLength: 50
+                      ДатаРождения:
+                        example: '1965-01-01T00:00:00'
+                        type: string
+                        format: date-time
+                      Роль:
+                        type: string
+                        maxLength: 100
+                        example: идентификаторРоликонтактноголица
+                        description: Роль контактного лица (или кем приходится). Публичный идентификатор.
+                      Описание:
+                        type: string
+                        example: Контактное лицо, загруженное через АПИ
+                        description: Любое описание контактного лица.
+                      ВидКонтактногоЛица:
+                        type: string
+                        enum: 
+                          - ЛичныйКонтакт
+                          - КонтактноеЛицоКонтрагента
+                          - ПрочееКонтактноеЛицо
+                        description: Вид контактного лица перечисление ВидыКонтактныхЛиц
+                      КонтактнаяИнформацияТелефон:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            Вид:
+                              $ref: '#/components/schemas/КонтактнаяИнформацияТелефон_вид'
+                            Значение:
+                              $ref: '#/components/schemas/Contacts_info_telefon_Value'
+                          required:
+                            - Вид
+                            - Значение
+                      КонтактнаяИнформацияАдресВСвободнойФорме:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            Вид:
+                              $ref: '#/components/schemas/КонтактнаяИнформацияАдрес_Вид'
+                            Значение:
+                              $ref: '#/components/schemas/Contacts_info_address_arbitrary'
+                          required:
+                            - Вид
+                            - Значение
+                      КонтактнаяИнформацияАдрес:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            Вид:
+                              $ref: '#/components/schemas/КонтактнаяИнформацияАдрес_Вид'
+                            Значение:
+                              $ref: '#/components/schemas/Contacts_info_address'
+                          required:
+                            - Вид
+                            - Значение
+                      КонтактнаяИнформацияАдресDaData:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            Вид:
+                              $ref: '#/components/schemas/КонтактнаяИнформацияАдрес_Вид'
+                            ЗначениеDaData:
+                              $ref: '#/components/schemas/Contacts_info_address_DaData'
+                          required:
+                            - Вид
+                            - ЗначениеDaData
+                      КонтактнаяИнформацияЭлектроннаяПочта:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            Вид:
+                              type: string
+                              enum:
+                                - АдресЭлектроннойПочты
+                            Значение:
+                              $ref: '#/components/schemas/Contacts_info_address_email'
+                          required:
+                            - Вид
+                            - Значение
+                      КонтактнаяИнформацияПрочее:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            Вид:
+                              type: string
+                              enum:
+                                - ДругаяКонтактнаяИнформация
+                            Значение:
+                              type: object
+                              properties:
+                                value:
+                                  example: 'РОССИЯ, г Санкт-Петербург, ул Уральская, д 13 литер е'
+                                  type: string
+                                  description: Произвольная строка в качестве дополнительной информации.
+                          required:
+                            - Вид
+                            - Значение
+                    required:
+                      - Фамилия
+                      - Имя
+                ИсторияФИО:
+                  $ref: '#/components/schemas/Hystory_Name'
+                ИсторияГражданство:
+                  $ref: '#/components/schemas/Hystory_place'
+                БанковскиеСчета:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      НомерСчета:
+                        example: '62317810768210190493'
+                        type: string
+                        description: Номер банковского счета
+                      БИКБанка:
+                        example: '049401601'
+                        type: string
+                        description: БИК банка
+                      Валюта:
+                        $ref: '#/components/schemas/Валюта'
+                    required:
+                      - НомерСчета
+                      - БИКБанка
+                
+                ИсторияКодов:
+                  $ref: '#/components/schemas/ИсторияКодов'
+
+
+
+
+      responses:
+        '200':
+          description: JSON формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+              example:
+                ИдентификаторЗапроса: c062ebc8-a1be-416c-bf99-34d13ef6095b
+                КодРезультата: 1
+                ОписаниеРезультата: Запрос успешно выполнен
+                ВнешниеДанные: null
+                КоличествоОбработанныхОбъектов: 1
+                Данные:
+                  Контрагенты:
+                    - Идентификатор: 004c9ffa-79ba-11ed-bd75-0242ac1ФЛСотрудник
+                      Статус: 1
+        '400':
+          description: Синтаксическая ошибка (запрос не валиден)
+        '401':
+          description: Запрос требует аутентификации
+        '404':
+          description: URL не найден
+
+
+
+
 
   '/contractor_relation_contractors_create/v1.0/{node}':
     post:
@@ -1347,6 +1926,8 @@ paths:
           description: Запрос требует аутентификации
         '404':
           description: URL не найден
+
+
 
 
   '/check_contractors_create/v1.0/{node}':
